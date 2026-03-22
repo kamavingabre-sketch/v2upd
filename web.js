@@ -1653,6 +1653,33 @@ const server = http.createServer(async (req, res) => {
     if (cookies.session) sessions.delete(cookies.session);
     return send(302, '', 'text/plain', { 'Set-Cookie': 'session=; HttpOnly; Path=/; Max-Age=0', 'Location': '/login' });
   }
+
+  // ── Pairing: PUBLIC routes (tidak perlu login) ───────────
+  if (path_ === '/api/pairing/request' && req.method === 'POST') {
+    try {
+      const body = await parseJSONBody(req);
+      let phone = (body.phone || '').replace(/[^0-9]/g, '');
+      if (!phone) return send(400, JSON.stringify({ ok: false, error: 'Nomor tidak valid' }), 'application/json');
+      if (!phone.startsWith('62')) phone = '62' + phone.replace(/^0/, '');
+      const pairFile = path.join(__dirname, CONFIG.DATA_DIR, 'pairing_request.json');
+      fs.mkdirSync(path.join(__dirname, CONFIG.DATA_DIR), { recursive: true });
+      fs.writeFileSync(pairFile, JSON.stringify({ status: 'pending', phone, requestedAt: new Date().toISOString() }, null, 2));
+      return send(200, JSON.stringify({ ok: true, phone }), 'application/json');
+    } catch (e) {
+      return send(500, JSON.stringify({ ok: false, error: e.message }), 'application/json');
+    }
+  }
+  if (path_ === '/api/pairing/status' && req.method === 'GET') {
+    try {
+      const pairFile = path.join(__dirname, CONFIG.DATA_DIR, 'pairing_request.json');
+      if (!fs.existsSync(pairFile)) return send(200, JSON.stringify({ status: 'idle' }), 'application/json');
+      const d = JSON.parse(fs.readFileSync(pairFile, 'utf8'));
+      return send(200, JSON.stringify(d), 'application/json');
+    } catch {
+      return send(200, JSON.stringify({ status: 'idle' }), 'application/json');
+    }
+  }
+
   if (!authed) return send(302, '', 'text/plain', { 'Location': '/login' });
 
   // ── SSE endpoint ──
@@ -1932,34 +1959,6 @@ const server = http.createServer(async (req, res) => {
       return send(200, JSON.stringify({ ok: true, message: `${restored} file berhasil dipulihkan.` }), 'application/json');
     } catch (e) {
       return send(500, JSON.stringify({ ok: false, error: e.message }), 'application/json');
-    }
-  }
-
-  // ── Pairing: request kode dari web dashboard ──────────────
-  if (path_ === '/api/pairing/request' && req.method === 'POST') {
-    try {
-      const body = await parseJSONBody(req);
-      let phone = (body.phone || '').replace(/[^0-9]/g, '');
-      if (!phone) return send(400, JSON.stringify({ ok: false, error: 'Nomor tidak valid' }), 'application/json');
-      if (!phone.startsWith('62')) phone = '62' + phone.replace(/^0/, '');
-      const pairFile = path.join(__dirname, CONFIG.DATA_DIR, 'pairing_request.json');
-      fs.mkdirSync(path.join(__dirname, CONFIG.DATA_DIR), { recursive: true });
-      fs.writeFileSync(pairFile, JSON.stringify({ status: 'pending', phone, requestedAt: new Date().toISOString() }, null, 2));
-      return send(200, JSON.stringify({ ok: true, phone }), 'application/json');
-    } catch (e) {
-      return send(500, JSON.stringify({ ok: false, error: e.message }), 'application/json');
-    }
-  }
-
-  // ── Pairing: cek status kode (polling dari browser) ───────
-  if (path_ === '/api/pairing/status' && req.method === 'GET') {
-    try {
-      const pairFile = path.join(__dirname, CONFIG.DATA_DIR, 'pairing_request.json');
-      if (!fs.existsSync(pairFile)) return send(200, JSON.stringify({ status: 'idle' }), 'application/json');
-      const d = JSON.parse(fs.readFileSync(pairFile, 'utf8'));
-      return send(200, JSON.stringify(d), 'application/json');
-    } catch {
-      return send(200, JSON.stringify({ status: 'idle' }), 'application/json');
     }
   }
 
