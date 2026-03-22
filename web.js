@@ -838,7 +838,7 @@ async function downloadBackup() {
   statusEl.style.background = 'rgba(0,200,255,.07)';
   statusEl.style.border = '1px solid rgba(0,200,255,.2)';
   statusEl.style.color = 'var(--cyan)';
-  statusEl.textContent = '⏳ Menyiapkan backup...';
+  statusEl.textContent = 'Menyiapkan backup...';
   try {
     const r = await fetch('/api/backup');
     if (!r.ok) throw new Error('Server error ' + r.status);
@@ -851,12 +851,12 @@ async function downloadBackup() {
     statusEl.style.background = 'rgba(0,229,160,.07)';
     statusEl.style.border = '1px solid rgba(0,229,160,.25)';
     statusEl.style.color = '#00e5a0';
-    statusEl.textContent = '✅ Backup berhasil diunduh!';
+    statusEl.textContent = 'Backup berhasil diunduh!';
   } catch(e) {
     statusEl.style.background = 'rgba(255,77,109,.08)';
     statusEl.style.border = '1px solid rgba(255,77,109,.2)';
     statusEl.style.color = '#ff8fa3';
-    statusEl.textContent = '❌ Gagal: ' + e.message;
+    statusEl.textContent = 'Gagal: ' + e.message;
   }
 }
 let restoreFileData = null;
@@ -871,7 +871,7 @@ function previewRestore(input) {
       document.getElementById('restore-btn').style.display = 'block';
     } catch {
       document.getElementById('restore-status').style.display = 'block';
-      document.getElementById('restore-status').textContent = '❌ File bukan JSON yang valid';
+      document.getElementById('restore-status').textContent = 'File bukan JSON yang valid';
       restoreFileData = null;
     }
   };
@@ -890,7 +890,7 @@ function handleDrop(e) {
       restoreFileData = ev.target.result;
       document.getElementById('restore-btn').style.display = 'block';
     } catch {
-      showRestoreStatus('error','❌ File bukan JSON yang valid');
+      showRestoreStatus('error','File bukan JSON yang valid');
     }
   };
   reader.readAsText(f);
@@ -905,10 +905,10 @@ function showRestoreStatus(type, msg) {
 }
 async function doRestore() {
   if (!restoreFileData) return;
-  if (!confirm('⚠️ Data saat ini akan DITIMPA oleh backup ini.\n\nLanjutkan restore?')) return;
+  if (!confirm('Data saat ini akan DITIMPA oleh backup ini.\n\nLanjutkan restore?')) return;;
   const btn = document.getElementById('restore-btn');
-  btn.disabled = true; btn.textContent = '⏳ Memproses...';
-  showRestoreStatus('info','⏳ Mengirim data ke server...');
+  btn.disabled = true; btn.textContent = 'Memproses...';
+  showRestoreStatus('info','Mengirim data ke server...');
   try {
     const r = await fetch('/api/restore', {
       method: 'POST',
@@ -917,11 +917,11 @@ async function doRestore() {
     });
     const d = await r.json();
     if (!d.ok) throw new Error(d.error || 'Server error');
-    showRestoreStatus('ok', '✅ Restore berhasil! ' + (d.message || '') + ' Halaman akan dimuat ulang...');
+    showRestoreStatus('ok', 'Restore berhasil! ' + (d.message || '') + ' Halaman akan dimuat ulang...');
     setTimeout(() => location.reload(), 2500);
   } catch(e) {
-    showRestoreStatus('error','❌ Gagal restore: ' + e.message);
-    btn.disabled = false; btn.textContent = '🔄 Restore Sekarang';
+    showRestoreStatus('error','Gagal restore: ' + e.message);
+    btn.disabled = false; btn.textContent = 'Restore Sekarang';
   }
 }
 function filterTable(){
@@ -936,7 +936,7 @@ function filterTable(){
   });
   document.getElementById('row-count').textContent=vis;
 }
-function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function esc(s){var r=String(s||'');r=r.replace(/&/g,'&amp;');r=r.replace(/</g,'&lt;');r=r.replace(/>/g,'&gt;');r=r.replace(/\x22/g,'&quot;');return r}
 function showDetail(jsonStr){
   const l=JSON.parse(jsonStr);
   const id='#'+String(l.id||0).padStart(4,'0');
@@ -1034,7 +1034,7 @@ function fmtDateClient(iso) {
 
 function buildRow(l) {
   const id='#'+String(l.id||0).padStart(4,'0');
-  const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,"\\\\'");
+  const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,'\\\\x27');
   return '<tr data-kat="'+esc(l.kategori)+'" data-kel="'+esc(l.kelurahan)+'" style="animation:fi .4s ease both">'
     +'<td><span class="id-badge">'+id+'</span></td>'
     +'<td><div class="fw5">'+esc(l.namaPelapor)+'</div><div class="fz12 text-muted">'+esc((l.pelapor||'').replace('@s.whatsapp.net',''))+'</div></td>'
@@ -1082,7 +1082,7 @@ evtSource.addEventListener('update', (e) => {
     const allRows = Array.from(overviewTbody.querySelectorAll('tr'));
     newItems.reverse().forEach(l => {
       const id='#'+String(l.id||0).padStart(4,'0');
-      const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,"\\\\'");
+      const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,'\\\\x27');
       const row='<tr style="animation:fi .4s ease both">'
         +'<td><span class="id-badge">'+id+'</span></td>'
         +'<td class="fw5">'+esc(l.namaPelapor)+'</td>'
@@ -1174,7 +1174,7 @@ async function addKegiatan() {
     statusEl.className = 'kg-status ok';
     setTimeout(() => { statusEl.className = 'kg-status'; }, 4000);
   } catch(e) {
-    statusEl.textContent = '❌ Gagal: ' + e.message;
+    statusEl.textContent = 'Gagal: ' + e.message;
     statusEl.className = 'kg-status err';
   }
 }
@@ -1264,7 +1264,7 @@ async function sendFeedback(laporanId, pelapor, namaPelapor, btn) {
       throw new Error(json.error || 'Gagal');
     }
   } catch(e) {
-    statusEl.textContent = '❌ Gagal: ' + e.message;
+    statusEl.textContent = 'Gagal: ' + e.message;
     statusEl.className = 'fb-status err';
     btn.disabled = false;
     btn.textContent = '📤 Kirim Balasan via WhatsApp';
