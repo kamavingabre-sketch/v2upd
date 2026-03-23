@@ -905,7 +905,7 @@ function showRestoreStatus(type, msg) {
 }
 async function doRestore() {
   if (!restoreFileData) return;
-  if (!confirm('Data saat ini akan DITIMPA oleh backup ini.\n\nLanjutkan restore?')) return;;
+  if (!confirm('Data saat ini akan DITIMPA oleh backup ini.\\n\\nLanjutkan restore?')) return;
   const btn = document.getElementById('restore-btn');
   btn.disabled = true; btn.textContent = 'Memproses...';
   showRestoreStatus('info','Mengirim data ke server...');
