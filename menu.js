@@ -28,20 +28,17 @@ Halo! Saya siap membantu Anda dengan berbagai layanan administrasi kecamatan.
 5️⃣ *Kontak & Jam Pelayanan*
    › Nomor & alamat kantor
 
-6️⃣ *Download Formulir*
-   › Unduh formulir administrasi
+6️⃣ *Program Kecamatan*
+   › RELASI JOHOR, SIGAP JOHOR, PINTAR JOHOR
 
-7️⃣ *Program Kecamatan*
-   › RELASI JOHOR, SIGAP JOHOR, UMKM
-
-8️⃣ *Wisata Medan Johor*
+7️⃣ *Wisata Medan Johor*
    › Kuliner, Hiburan & Taman, Religi & Kesehatan
 
-9️⃣ *LiveChat Admin*
+8️⃣ *LiveChat Admin*
    › Chat langsung dengan petugas kecamatan
 
 ━━━━━━━━━━━━━━━━━━━━━━━
-💡 Ketik *angka menu* (1-9) untuk memilih
+💡 Ketik *angka menu* (1-8) untuk memilih
 ━━━━━━━━━━━━━━━━━━━━━━━
 🏙️ *#MEDANUNTUKSEMUA*
 _Hallo Johor — Hadir untuk Warga Medan Johor_`;
@@ -371,26 +368,37 @@ export const MENU_PBB = `💰 *INFORMASI PAJAK PBB*
 ━━━━━━━━━━━━━━━━━━━━━━━
 
 *Tentang SPPT PBB:*
-SPPT (Surat Pemberitahuan Pajak Terutang) adalah dokumen tagihan PBB tahunan.
+SPPT (Surat Pemberitahuan Pajak Terutang) adalah dokumen tagihan PBB tahunan yang diterbitkan oleh Badan Pendapatan Daerah (Bapenda) Kota Medan.
+
+📱 *CEK TAGIHAN PBB ONLINE:*
+Gunakan aplikasi resmi Bapenda Kota Medan:
+🔗 *https://smarttaxmobile.medan.go.id*
+
+Cara cek tagihan:
+1️⃣ Buka link di atas via browser HP
+2️⃣ Masukkan *NOP* (Nomor Objek Pajak)
+3️⃣ Pilih tahun pajak
+4️⃣ Tagihan langsung tampil
+
+📌 *NOP* tertera pada SPPT PBB yang diterima dari kelurahan (18 digit angka).
 
 📅 *Jadwal Distribusi SPPT:*
-Biasanya dibagikan antara bulan Maret-April setiap tahun melalui RT/RW setempat.
+Biasanya dibagikan Maret–April setiap tahun melalui RT/RW setempat.
 
 💳 *Cara Pembayaran PBB:*
-✅ Melalui Bank Sumut
-✅ Melalui ATM (dengan kode bayar SPPT)
-✅ Indomaret / Alfamart (tunjukkan SPPT)
+✅ Bank Sumut (teller/ATM)
+✅ Indomaret / Alfamart
 ✅ Kantor Pos terdekat
-✅ Aplikasi mobile banking
+✅ GoPay, Dana, OVO (pilih menu PBB → Kota Medan)
+✅ Tokopedia / Shopee (menu PBB Online)
+✅ Mobile Banking
 
-📍 *Lokasi Pembayaran Terdekat:*
-Kantor Kelurahan masing-masing (pada periode tertentu)
+⚠️ *Batas Pembayaran:* 31 Agustus setiap tahun (hindari denda 2% per bulan!)
 
-📞 *Kontak Petugas PBB:*
-Hubungi Kantor Kecamatan Medan Johor
-📱 0813-6777-2047
-
-⚠️ *Batas Pembayaran:* 31 Agustus setiap tahun (hindari denda!)
+📞 *Kontak Bapenda Kota Medan:*
+📱 Pengaduan: 0822-7686-3640 / 0853-7155-9487
+📧 bapendakotamedan@gmail.com
+🌐 bapenda.medan.go.id
 
 ━━━━━━━━━━━━━━━━━━━━━━━
 🏙️ *#MEDANUNTUKSEMUA*
@@ -434,73 +442,9 @@ Sabtu - Minggu: TUTUP
 🏙️ *#MEDANUNTUKSEMUA*
 Ketik *0* untuk kembali ke menu`;
 
-export const MENU_FORMULIR = `📥 *DOWNLOAD FORMULIR*
-━━━━━━━━━━━━━━━━━━━━━━━
-
-Formulir tersedia untuk diunduh:
-
-📄 *F1* — Formulir Surat Keterangan
-📄 *F2* — Formulir Pengantar Administrasi
-📄 *F3* — Formulir Pengaduan Masyarakat
-
-━━━━━━━━━━━━━━━━━━━━━━━
-💡 Ketik *F1 / F2 / F3* untuk mendapatkan link download
-
-Atau kunjungi langsung:
-🌐 *medanjohor.pemkomedan.go.id*
-
-📞 Butuh bantuan? Hubungi:
-📱 0813-6777-2047
-
-━━━━━━━━━━━━━━━━━━━━━━━
-🏙️ *#MEDANUNTUKSEMUA*
-Ketik *0* untuk kembali ke menu`;
-
-export const FORMULIR_LINKS = {
-  F1: `📄 *Formulir Surat Keterangan*
-
-🔗 Link Download:
-https://drive.google.com/formulir-surat-keterangan
-
-📌 *Petunjuk:*
-1. Download formulir
-2. Isi dengan lengkap dan benar
-3. Bawa ke kantor kelurahan
-4. Serahkan bersama persyaratan lainnya
-
-━━━━━━━━━━━━━━━━━━━━━━━
-Ketik *0* untuk kembali ke menu`,
-
-  F2: `📄 *Formulir Pengantar Administrasi*
-
-🔗 Link Download:
-https://drive.google.com/formulir-pengantar-administrasi
-
-📌 *Petunjuk:*
-1. Download formulir
-2. Isi nama, NIK, dan keperluan
-3. Minta tanda tangan RT/RW
-4. Bawa ke kantor kelurahan
-
-━━━━━━━━━━━━━━━━━━━━━━━
-Ketik *0* untuk kembali ke menu`,
-
-  F3: `📄 *Formulir Pengaduan Masyarakat*
-
-🔗 Link Download:
-https://drive.google.com/formulir-pengaduan
-
-📌 *Petunjuk:*
-1. Download formulir
-2. Isi data diri dan uraian pengaduan
-3. Lampirkan foto bukti (jika ada)
-4. Serahkan ke kantor kecamatan
-
-💡 *Lebih mudah:* Gunakan menu Pengaduan di bot ini langsung!
-
-━━━━━━━━━━━━━━━━━━━━━━━
-Ketik *0* untuk kembali ke menu`
-};
+// MENU_FORMULIR dihapus - fitur tidak lagi tersedia
+export const MENU_FORMULIR = '';
+export const FORMULIR_LINKS = {};
 
 export const MENU_PROGRAM = `🌟 *PROGRAM UNGGULAN KECAMATAN MEDAN JOHOR*
 ━━━━━━━━━━━━━━━━━━━━━━━
@@ -513,6 +457,21 @@ Warga dapat melaporkan titik sampah liar untuk ditindaklanjuti.
 🛡️ *SIGAP JOHOR*
 (Sistem Gerak Cepat Pengamanan Johor)
 Sistem keamanan lingkungan yang melibatkan seluruh warga untuk merespons gangguan keamanan secara cepat.
+
+📚 *PINTAR JOHOR*
+(Perpustakaan Interaktif Digital Rakyat Johor)
+Inovasi literasi digital terdepan dari Kecamatan Medan Johor!
+
+PINTAR JOHOR hadir sebagai ruang baca & belajar digital yang bisa diakses kapan saja dan di mana saja oleh seluruh warga — mulai dari anak-anak, pelajar, hingga orang dewasa.
+
+✨ *Apa yang bisa kamu temukan di PINTAR JOHOR?*
+📖 Koleksi buku & e-book digital gratis
+🎓 Materi edukasi & literasi untuk semua usia
+💡 Konten kreatif & informatif seputar Medan Johor
+🌐 Akses mudah lewat smartphone, tanpa perlu antri!
+
+🔗 Akses sekarang:
+*https://bit.ly/pintarjohor*
 
 🏪 *PROGRAM PEMBERDAYAAN UMKM*
 Pendampingan dan pelatihan bagi pelaku usaha mikro, kecil, dan menengah di wilayah Kecamatan Medan Johor.
@@ -753,7 +712,7 @@ export const KATEGORI_PENGADUAN = [
   { id: '2', label: 'Gangguan Ketertiban', emoji: '⚠️' },
   { id: '3', label: 'Lampu Jalan Mati', emoji: '💡' },
   { id: '4', label: 'Drainase Tersumbat', emoji: '🌊' },
-  { id: '5', label: 'Administrasi Pelayanan', emoji: '📋' },
+  { id: '5', label: 'Orang Terlantar / ODGJ', emoji: '🏥' },
   { id: '6', label: 'Bangunan Liar', emoji: '🏚️' },
   { id: '7', label: 'Lainnya', emoji: '📌' },
 ];
