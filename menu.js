@@ -3,7 +3,7 @@
 //   Layanan Kecamatan Medan Johor
 // ═══════════════════════════════════════════════
 
-export const MENU_IMAGE_URL = 'https://i.ibb.co.com/bM92QsML/IMG-20260315-WA0016.jpg';
+export const MENU_IMAGE_URL = 'https://i.ibb.co.com/Tqw7nWqq/IMG-20260323-215603.jpg';
 
 export const MENU_UTAMA = `🏛️ *Selamat Datang di*
 🤝 *HALLO JOHOR* 🤝
