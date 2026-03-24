@@ -230,16 +230,21 @@ export const handleMessage = async (sock, msg) => {
       break;
 
     case '6':
+      await sendText(sock, senderJid, MENU_FORMULIR);
+      logger.send(senderJid, 'Menu Formulir');
+      break;
+
+    case '7':
       await sendText(sock, senderJid, MENU_PROGRAM);
       logger.send(senderJid, 'Menu Program Kecamatan');
       break;
 
-    case '7':
+    case '8':
       await sendText(sock, senderJid, MENU_PARIWISATA);
       logger.send(senderJid, 'Menu Wisata Medan Johor');
       break;
 
-    case '8': {
+    case '9': {
       const existing = getLivechatByJid(senderJid);
       if (existing) {
         setSession(senderJid, { flow: 'livechat' });
@@ -299,12 +304,14 @@ export const handleMessage = async (sock, msg) => {
 
     case 'F1': case 'f1':
     case 'F2': case 'f2':
-    case 'F3': case 'f3':
-      // Fitur formulir sudah dihapus
-      await sendText(sock, senderJid,
-        `ℹ️ Fitur Download Formulir sudah tidak tersedia.\n\nUntuk kebutuhan administrasi, silakan kunjungi langsung Kantor Kecamatan Medan Johor.\n📱 Info: 0813-6777-2047\n\nKetik *0* untuk kembali ke menu.`
-      );
+    case 'F3': case 'f3': {
+      const key = textMsg.toUpperCase();
+      if (FORMULIR_LINKS[key]) {
+        await sendText(sock, senderJid, FORMULIR_LINKS[key]);
+        logger.send(senderJid, `Link formulir ${key}`);
+      }
       break;
+    }
 
     default:
       if (textMsg.length > 0) {
@@ -656,7 +663,7 @@ const handleLivechatFlow = async (sock, jid, name, msg, session, { textMsg, imag
 
     if (!result) {
       clearSession(jid);
-      await sendText(sock, jid, `ℹ️ Sesi LiveChat Anda telah berakhir.\n\nKetik *8* untuk memulai sesi baru.`);
+      await sendText(sock, jid, `ℹ️ Sesi LiveChat Anda telah berakhir.\n\nKetik *9* untuk memulai sesi baru.`);
       return;
     }
 
@@ -671,7 +678,7 @@ const handleLivechatFlow = async (sock, jid, name, msg, session, { textMsg, imag
   if (!result) {
     clearSession(jid);
     await sendText(sock, jid,
-      `ℹ️ Sesi LiveChat Anda telah berakhir.\n\nKetik *8* untuk memulai sesi baru atau *menu* untuk kembali.`
+      `ℹ️ Sesi LiveChat Anda telah berakhir.\n\nKetik *9* untuk memulai sesi baru atau *menu* untuk kembali.`
     );
     return;
   }

@@ -47,46 +47,28 @@ const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 // ─── Track Reconnect ─────────────────────────────────────
 let reconnectCount = 0;
 
-// ─── Pairing Request File ────────────────────────────────
-const PAIR_FILE = './data/pairing_request.json';
-
-function clearPairingRequest() {
-  try { if (fs.existsSync(PAIR_FILE)) fs.unlinkSync(PAIR_FILE); } catch {}
-}
-
-async function waitForWebPairingRequest(timeoutSec = 300) {
-  // Jika ada request yang sudah pending, gunakan langsung
-  if (fs.existsSync(PAIR_FILE)) {
-    try {
-      const d = JSON.parse(fs.readFileSync(PAIR_FILE, 'utf8'));
-      if (d.status === 'pending' && d.phone) return d.phone;
-    } catch {}
-  }
-  const port = process.env.PORT || process.env.WEB_PORT || 3000;
-  logger.info('PAIR', `Menunggu nomor dari web dashboard (timeout: ${timeoutSec}s)...`);
-  logger.info('PAIR', `Buka http://localhost:${port} → panel Pairing Code`);
-  const deadline = Date.now() + timeoutSec * 1000;
-  while (Date.now() < deadline) {
-    await delay(2000);
-    if (fs.existsSync(PAIR_FILE)) {
-      try {
-        const d = JSON.parse(fs.readFileSync(PAIR_FILE, 'utf8'));
-        if (d.status === 'pending' && d.phone) return d.phone;
-      } catch {}
-    }
-  }
-  return null;
-}
-
-function writePairingCode(code) {
+// ─── Restore Auth dari Environment Variable ───────────────
+// Dipakai untuk Railway free plan (tanpa persistent volume).
+// Set env var AUTH_CREDS dengan output dari script export-auth.js
+function restoreAuthFromEnv() {
+  const encoded = process.env.AUTH_CREDS;
+  if (!encoded) return;
   try {
-    if (!fs.existsSync(PAIR_FILE)) return;
-    const d = JSON.parse(fs.readFileSync(PAIR_FILE, 'utf8'));
-    d.status = 'code_ready';
-    d.code = code;
-    d.codeAt = new Date().toISOString();
-    fs.writeFileSync(PAIR_FILE, JSON.stringify(d, null, 2));
-  } catch {}
+    const files = JSON.parse(Buffer.from(encoded, 'base64').toString('utf8'));
+    if (!fs.existsSync(CONFIG.AUTH_DIR)) {
+      fs.mkdirSync(CONFIG.AUTH_DIR, { recursive: true });
+    }
+    for (const [filename, content] of Object.entries(files)) {
+      fs.writeFileSync(
+        `${CONFIG.AUTH_DIR}/${filename}`,
+        typeof content === 'string' ? content : JSON.stringify(content),
+        'utf8'
+      );
+    }
+    logger.info('AUTH', '🔑 Credentials dipulihkan dari AUTH_CREDS env var');
+  } catch (err) {
+    logger.warn('AUTH', 'Gagal memulihkan AUTH_CREDS', err.message);
+  }
 }
 
 // ─── Feedback Worker ──────────────────────────────────────
@@ -198,6 +180,9 @@ async function startBot() {
   logger.info('BOOT', 'Inisialisasi sistem bot...');
   await delay(500);
 
+  // Pulihkan auth dari env var jika tersedia (Railway free plan)
+  restoreAuthFromEnv();
+
   // Load auth state
   const { state, saveCreds } = await useMultiFileAuthState(CONFIG.AUTH_DIR);
   logger.info('AUTH', 'Auth state dimuat', CONFIG.AUTH_DIR);
@@ -232,22 +217,16 @@ async function startBot() {
     logger.info('PAIR', 'Akun belum terdaftar. Memulai proses Pairing Code...');
     logger.divider();
 
-    // Prioritas: env var → web dashboard → terminal (jika interaktif)
+    // Railway / non-interactive: baca dari env var PHONE_NUMBER
+    // Lokal: input manual via terminal
     let phoneNumber;
     if (process.env.PHONE_NUMBER) {
       phoneNumber = process.env.PHONE_NUMBER;
       logger.info('PAIR', `Menggunakan PHONE_NUMBER dari environment: ${phoneNumber}`);
     } else {
-      // Coba dari web dashboard (pairing_request.json)
-      phoneNumber = await waitForWebPairingRequest(process.stdout.isTTY ? 20 : 300);
-      if (!phoneNumber && process.stdout.isTTY) {
-        // Fallback ke terminal jika interaktif
-        phoneNumber = await question('\n📱 Masukkan nomor WhatsApp (format: 628xxxxxxxxxx): ');
-      }
-      if (!phoneNumber) {
-        logger.error('PAIR', 'Tidak ada nomor yang diberikan. Restart untuk mencoba lagi.');
-        process.exit(1);
-      }
+      phoneNumber = await question(
+        '\n📱 Masukkan nomor WhatsApp (format: 628xxxxxxxxxx): '
+      );
     }
 
     phoneNumber = phoneNumber.replace(/[^0-9]/g, '');
@@ -263,9 +242,6 @@ async function startBot() {
     try {
       const code = await sock.requestPairingCode(phoneNumber);
       const formattedCode = code?.match(/.{1,4}/g)?.join('-') || code;
-
-      // Tulis kode ke file agar web dashboard bisa membacanya
-      writePairingCode(formattedCode);
 
       logger.divider();
       console.log(`\n`);
@@ -301,7 +277,6 @@ async function startBot() {
 
     if (connection === 'open') {
       reconnectCount = 0;
-      clearPairingRequest(); // Hapus file pairing request setelah berhasil connect
       const botJid = sock.user?.id;
       const botName = sock.user?.name;
       logger.success('CONNECTED', `Bot terhubung!`, `${botName} (${botJid})`);

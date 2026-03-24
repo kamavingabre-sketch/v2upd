@@ -94,156 +94,44 @@ const pageLogin = (error = '') => `<!DOCTYPE html>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#040d1a;--card:#0e1e38;--border:#1a3356;--cyan:#00c8ff;--green:#00e5a0;--text:#e2eaf5;--muted:#4a6a8a;--orange:#ff9f43}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background-image:radial-gradient(ellipse 70% 60% at 15% 10%,rgba(0,200,255,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 85%,rgba(0,229,160,.05) 0%,transparent 60%),linear-gradient(rgba(0,200,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.025) 1px,transparent 1px);background-size:auto,auto,48px 48px,48px 48px}
-.page-wrap{width:100%;max-width:860px;animation:up .5s ease both}
+:root{--bg:#040d1a;--card:#0e1e38;--border:#1a3356;--cyan:#00c8ff;--green:#00e5a0;--text:#e2eaf5;--muted:#4a6a8a}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background-image:radial-gradient(ellipse 70% 60% at 15% 10%,rgba(0,200,255,.07) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 85% 85%,rgba(0,229,160,.05) 0%,transparent 60%),linear-gradient(rgba(0,200,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(0,200,255,.025) 1px,transparent 1px);background-size:auto,auto,48px 48px,48px 48px}
+.wrap{width:100%;max-width:400px;padding:24px;animation:up .5s ease both}
 @keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-.logo{text-align:center;margin-bottom:32px}
-.logo-box{width:56px;height:56px;background:linear-gradient(135deg,var(--cyan),var(--green));border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:12px;box-shadow:0 0 36px rgba(0,200,255,.3)}
-.logo-name{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,#fff 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.logo{text-align:center;margin-bottom:36px}
+.logo-box{width:60px;height:60px;background:linear-gradient(135deg,var(--cyan),var(--green));border-radius:18px;display:inline-flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:14px;box-shadow:0 0 36px rgba(0,200,255,.3)}
+.logo-name{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;background:linear-gradient(135deg,#fff 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .logo-sub{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:2px;margin-top:3px}
-.panels{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-@media(max-width:640px){.panels{grid-template-columns:1fr}}
-.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:28px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
-.card.pair-card{border-color:rgba(255,159,67,.25);background:linear-gradient(160deg,#0e1e38 70%,rgba(255,159,67,.04))}
-.card-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.card-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
-.card-icon.ci-login{background:rgba(0,200,255,.12)}
-.card-icon.ci-pair{background:rgba(255,159,67,.12)}
-.card h2{font-family:'Syne',sans-serif;font-size:17px;font-weight:700}
-.card p{font-size:12px;color:var(--muted);margin-bottom:20px;margin-top:4px;line-height:1.6}
-.divider{height:1px;background:var(--border);margin:16px 0}
-.field{margin-bottom:14px}
-label{display:block;font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
-input[type=text],input[type=password],input[type=tel]{width:100%;background:#0d1f3c;border:1px solid var(--border);border-radius:10px;padding:11px 13px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
+.card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:32px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.card h2{font-family:'Syne',sans-serif;font-size:19px;font-weight:700;margin-bottom:5px}
+.card p{font-size:13px;color:var(--muted);margin-bottom:24px}
+.field{margin-bottom:16px}
+label{display:block;font-size:11px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+input{width:100%;background:#0d1f3c;border:1px solid var(--border);border-radius:10px;padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s,box-shadow .2s}
 input:focus{border-color:#0090c8;box-shadow:0 0 0 3px rgba(0,200,255,.1)}
-.pair-card input:focus{border-color:rgba(255,159,67,.6);box-shadow:0 0 0 3px rgba(255,159,67,.1)}
-.btn{width:100%;padding:12px;border:none;border-radius:10px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;margin-top:4px;transition:opacity .2s}
-.btn:hover{opacity:.85}
-.btn:disabled{opacity:.45;cursor:not-allowed}
-.btn-login{background:linear-gradient(135deg,#0090c8,var(--cyan));color:#040d1a}
-.btn-pair{background:linear-gradient(135deg,#e67e22,var(--orange));color:#fff}
-.err{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);color:#ff8fa3;border-radius:10px;padding:10px 13px;font-size:12px;margin-bottom:16px}
-.foot{text-align:center;font-size:11px;color:var(--muted);margin-top:20px}
-/* Pairing status */
-.pair-status{display:none;margin-top:14px;border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.6}
-.pair-status.waiting{background:rgba(0,200,255,.07);border:1px solid rgba(0,200,255,.2);color:var(--cyan)}
-.pair-status.ready{background:rgba(0,229,160,.07);border:1px solid rgba(0,229,160,.25);color:#00e5a0}
-.pair-status.error{background:rgba(255,77,109,.08);border:1px solid rgba(255,77,109,.2);color:#ff8fa3}
-.code-box{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;letter-spacing:4px;text-align:center;margin:10px 0 6px;color:#fff}
-.pair-steps{font-size:11px;color:var(--muted);margin-top:8px;line-height:2}
-.spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(0,200,255,.3);border-top-color:var(--cyan);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px}
-@keyframes spin{to{transform:rotate(360deg)}}
+.btn{width:100%;padding:13px;background:linear-gradient(135deg,#0090c8,var(--cyan));border:none;border-radius:10px;color:#040d1a;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;cursor:pointer;margin-top:6px;transition:opacity .2s}
+.btn:hover{opacity:.88}
+.err{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);color:#ff8fa3;border-radius:10px;padding:11px 14px;font-size:13px;margin-bottom:18px}
+.foot{text-align:center;font-size:11px;color:var(--muted);margin-top:22px}
 </style></head><body>
-<div class="page-wrap">
+<div class="wrap">
   <div class="logo">
     <div class="logo-box">🏙️</div>
     <div class="logo-name">Hallo Johor</div>
     <div class="logo-sub">Dashboard Admin</div>
   </div>
-  <div class="panels">
-
-    <!-- Panel 1: Login Dashboard -->
-    <div class="card">
-      <div class="card-head">
-        <div class="card-icon ci-login">🔐</div>
-        <h2>Login Dashboard</h2>
-      </div>
-      <p>Masuk untuk mengelola laporan, grup, livechat, dan kegiatan.</p>
-      ${error ? `<div class="err">⚠️ ${esc(error)}</div>` : ''}
-      <form method="POST" action="/login">
-        <div class="field"><label>Username</label><input type="text" name="username" placeholder="admin" required autocomplete="username"></div>
-        <div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" required autocomplete="current-password"></div>
-        <button type="submit" class="btn btn-login">Masuk ke Dashboard →</button>
-      </form>
-    </div>
-
-    <!-- Panel 2: Pairing WhatsApp -->
-    <div class="card pair-card">
-      <div class="card-head">
-        <div class="card-icon ci-pair">📱</div>
-        <h2>Pairing WhatsApp</h2>
-      </div>
-      <p>Hubungkan nomor WhatsApp ke bot tanpa perlu akses terminal server.</p>
-      <div class="field">
-        <label>Nomor WhatsApp</label>
-        <input type="tel" id="pair-phone" placeholder="628xxxxxxxxxx" maxlength="16">
-      </div>
-      <button class="btn btn-pair" id="pair-btn" onclick="requestPairing()">🔗 Minta Pairing Code</button>
-      <div class="pair-status waiting" id="pair-status-waiting">
-        <span class="spinner"></span> Menunggu kode dari server... Mohon tunggu.
-      </div>
-      <div class="pair-status ready" id="pair-status-ready">
-        <div style="font-size:12px;margin-bottom:4px">✅ Kode siap! Masukkan di WhatsApp:</div>
-        <div class="code-box" id="pair-code-box">----</div>
-        <div class="pair-steps">1. Buka WhatsApp di HP<br>2. Tiga titik → Perangkat Tertaut<br>3. Tautkan Perangkat → Masukkan kode di atas</div>
-      </div>
-      <div class="pair-status error" id="pair-status-error">⚠️ <span id="pair-error-msg">Gagal meminta kode.</span></div>
-    </div>
-
+  <div class="card">
+    <h2>Selamat Datang 👋</h2>
+    <p>Masuk untuk mengelola laporan pengaduan masyarakat.</p>
+    ${error ? `<div class="err">⚠️ ${esc(error)}</div>` : ''}
+    <form method="POST" action="/login">
+      <div class="field"><label>Username</label><input type="text" name="username" placeholder="admin" required autocomplete="username"></div>
+      <div class="field"><label>Password</label><input type="password" name="password" placeholder="••••••••" required autocomplete="current-password"></div>
+      <button type="submit" class="btn">Masuk ke Dashboard →</button>
+    </form>
   </div>
   <p class="foot">Kecamatan Medan Johor — Sistem Pengaduan Digital</p>
-</div>
-<script>
-let pairPollTimer = null;
-async function requestPairing() {
-  const phone = document.getElementById('pair-phone').value.replace(/[^0-9]/g,'');
-  if (!phone || phone.length < 10) { alert('Masukkan nomor yang valid (contoh: 628123456789)'); return; }
-  const btn = document.getElementById('pair-btn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Memproses...';
-  hideAllPairStatus();
-  try {
-    const r = await fetch('/api/pairing/request', {
-      method: 'POST', headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({ phone })
-    });
-    const d = await r.json();
-    if (!d.ok) throw new Error(d.error || 'Server error');
-    document.getElementById('pair-status-waiting').style.display = 'block';
-    startPairPolling();
-  } catch(e) {
-    showPairError(e.message);
-    btn.disabled = false;
-    btn.textContent = '🔗 Minta Pairing Code';
-  }
-}
-function hideAllPairStatus() {
-  ['pair-status-waiting','pair-status-ready','pair-status-error'].forEach(id => document.getElementById(id).style.display='none');
-}
-function showPairError(msg) {
-  hideAllPairStatus();
-  document.getElementById('pair-error-msg').textContent = msg;
-  document.getElementById('pair-status-error').style.display = 'block';
-}
-function startPairPolling() {
-  if (pairPollTimer) clearInterval(pairPollTimer);
-  let attempts = 0;
-  pairPollTimer = setInterval(async () => {
-    attempts++;
-    if (attempts > 60) { // 2 menit timeout
-      clearInterval(pairPollTimer);
-      showPairError('Timeout. Coba lagi.');
-      document.getElementById('pair-btn').disabled = false;
-      document.getElementById('pair-btn').textContent = '🔗 Minta Pairing Code';
-      return;
-    }
-    try {
-      const r = await fetch('/api/pairing/status');
-      const d = await r.json();
-      if (d.status === 'code_ready' && d.code) {
-        clearInterval(pairPollTimer);
-        hideAllPairStatus();
-        document.getElementById('pair-code-box').textContent = d.code;
-        document.getElementById('pair-status-ready').style.display = 'block';
-        document.getElementById('pair-btn').textContent = '🔗 Minta Pairing Code';
-        document.getElementById('pair-btn').disabled = false;
-      }
-    } catch {}
-  }, 2000);
-}
-</script>
-</body></html>`;
+</div></body></html>`;
 
 const pageDashboard = (laporan, groups, routing = {}, kegiatan = []) => {
   const total = laporan.length;
@@ -349,7 +237,7 @@ const pageDashboard = (laporan, groups, routing = {}, kegiatan = []) => {
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"><\/script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#040d1a;--bg2:#071326;--bg3:#0d1f3c;--card:#0e1e38;--border:#1a3356;--border2:#243d5c;--cyan:#00c8ff;--cyan2:#0090c8;--green:#00e5a0;--amber:#fbbf24;--red:#ff4d6d;--orange:#ff9f43;--purple:#a78bfa;--text:#e2eaf5;--text2:#8facc5;--muted:#4a6a8a;--sb:256px}
+:root{--bg:#040d1a;--bg2:#071326;--bg3:#0d1f3c;--card:#0e1e38;--border:#1a3356;--border2:#243d5c;--cyan:#00c8ff;--cyan2:#0090c8;--green:#00e5a0;--amber:#fbbf24;--red:#ff4d6d;--purple:#a78bfa;--text:#e2eaf5;--text2:#8facc5;--muted:#4a6a8a;--sb:256px}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;display:flex}
 a{color:inherit;text-decoration:none}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
@@ -552,7 +440,6 @@ textarea.kg-input{resize:vertical;min-height:72px}
     <div class="ni" onclick="showSec('grup',this)"><span class="ic">📡</span> Grup WhatsApp</div>
     <div class="nav-sec">Info</div>
     <div class="ni" onclick="showSec('panduan',this)"><span class="ic">📖</span> Panduan</div>
-    <div class="ni" onclick="showSec('backup',this)"><span class="ic">💾</span> Backup & Restore</div>
   </div>
   <div class="sb-foot"><a class="logout" href="/logout">🚪 Keluar</a></div>
 </div>
@@ -714,65 +601,6 @@ textarea.kg-input{resize:vertical;min-height:72px}
       </div>
     </div>
 
-    <div class="sec" id="sec-backup">
-      <div class="sec-title">Backup & Restore Data</div>
-      <div class="sec-sub">Simpan dan pulihkan semua data konfigurasi bot agar aman saat deploy ulang</div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:860px">
-
-        <!-- Backup Card -->
-        <div class="info-card" style="display:flex;flex-direction:column;gap:14px">
-          <div style="font-size:26px">📦</div>
-          <div class="cc-title">Download Backup</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.8">
-            Unduh semua data konfigurasi dalam satu file JSON:<br>
-            <span style="color:var(--cyan)">✓</span> Routing kategori ke grup<br>
-            <span style="color:var(--cyan)">✓</span> Daftar grup WhatsApp<br>
-            <span style="color:var(--cyan)">✓</span> Arsip laporan pengaduan<br>
-            <span style="color:var(--cyan)">✓</span> Data kegiatan kecamatan<br>
-            <span style="color:var(--cyan)">✓</span> Counter & queue feedback
-          </div>
-          <div style="margin-top:auto">
-            <button class="det-btn" style="width:100%;padding:11px;font-size:13px;background:linear-gradient(135deg,#0090c8,var(--cyan));color:#040d1a;font-weight:700;border:none;border-radius:10px;cursor:pointer" onclick="downloadBackup()">⬇️ Download Backup JSON</button>
-          </div>
-          <div id="backup-status" style="display:none;font-size:12px;padding:9px 12px;border-radius:8px"></div>
-        </div>
-
-        <!-- Restore Card -->
-        <div class="info-card" style="display:flex;flex-direction:column;gap:14px">
-          <div style="font-size:26px">🔄</div>
-          <div class="cc-title">Restore Backup</div>
-          <div style="font-size:12px;color:var(--text2);line-height:1.8">
-            Upload file backup JSON untuk memulihkan semua konfigurasi.<br><br>
-            <span style="color:var(--orange)">⚠️ Perhatian:</span> Data yang ada akan <strong style="color:#fff">ditimpa</strong> oleh data dari file backup. Pastikan file yang diupload adalah backup yang valid.
-          </div>
-          <div style="margin-top:auto;display:flex;flex-direction:column;gap:10px">
-            <label style="display:block;cursor:pointer">
-              <div style="border:2px dashed var(--border2);border-radius:10px;padding:14px;text-align:center;font-size:12px;color:var(--muted);transition:border-color .2s" id="drop-zone" ondragover="event.preventDefault();this.style.borderColor='var(--cyan)'" ondragleave="this.style.borderColor='var(--border2)'" ondrop="handleDrop(event)">
-                <div style="font-size:20px;margin-bottom:4px">📂</div>
-                <span id="restore-filename">Klik atau drag file backup.json</span>
-              </div>
-              <input type="file" id="restore-file" accept=".json" style="display:none" onchange="previewRestore(this)">
-            </label>
-            <button class="det-btn" id="restore-btn" style="width:100%;padding:11px;font-size:13px;background:linear-gradient(135deg,#c0392b,#e74c3c);color:#fff;font-weight:700;border:none;border-radius:10px;cursor:pointer;display:none" onclick="doRestore()">🔄 Restore Sekarang</button>
-          </div>
-          <div id="restore-status" style="display:none;font-size:12px;padding:9px 12px;border-radius:8px"></div>
-        </div>
-
-      </div>
-
-      <!-- Backup Info Box -->
-      <div style="max-width:860px;margin-top:18px;background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.15);border-radius:14px;padding:16px 20px">
-        <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#00e5a0;margin-bottom:8px">💡 Tips Backup</div>
-        <div style="font-size:12px;color:var(--text2);line-height:2">
-          • Download backup sebelum melakukan deploy ulang di Railway / VPS<br>
-          • File backup berformat <code style="color:var(--cyan)">hallo-johor-backup-YYYY-MM-DD.json</code><br>
-          • Setelah restore berhasil, bot tidak perlu direstart — data langsung aktif<br>
-          • Backup <strong style="color:#fff">tidak menyimpan</strong> sesi WhatsApp (auth) dan foto laporan
-        </div>
-      </div>
-    </div>
-
     <div class="sec" id="sec-livechat">
       <div class="sec-title">LiveChat Admin</div>
       <div class="sec-sub">Chat real-time dengan warga yang menghubungi via WhatsApp Bot</div>
@@ -822,107 +650,13 @@ textarea.kg-input{resize:vertical;min-height:72px}
 </div>
 
 <script>
-const sections=['overview','laporan','grup','livechat','kegiatan','panduan','backup'];
-const titles={overview:'Overview',laporan:'Semua Laporan',grup:'Grup WhatsApp',livechat:'LiveChat Admin',kegiatan:'Kegiatan Kecamatan',panduan:'Panduan',backup:'Backup & Restore'};
+const sections=['overview','laporan','grup','livechat','kegiatan','panduan'];
+const titles={overview:'Overview',laporan:'Semua Laporan',grup:'Grup WhatsApp',livechat:'LiveChat Admin',kegiatan:'Kegiatan Kecamatan',panduan:'Panduan'};
 function showSec(id,el){
   sections.forEach(s=>document.getElementById('sec-'+s).classList.toggle('on',s===id));
   document.querySelectorAll('.ni').forEach(n=>n.classList.remove('on'));
   if(el)el.classList.add('on');
   document.getElementById('topbar-title').textContent=titles[id]||id;
-}
-
-// ── Backup & Restore ─────────────────────────────────────
-async function downloadBackup() {
-  const statusEl = document.getElementById('backup-status');
-  statusEl.style.display = 'block';
-  statusEl.style.background = 'rgba(0,200,255,.07)';
-  statusEl.style.border = '1px solid rgba(0,200,255,.2)';
-  statusEl.style.color = 'var(--cyan)';
-  statusEl.textContent = 'Menyiapkan backup...';
-  try {
-    const r = await fetch('/api/backup');
-    if (!r.ok) throw new Error('Server error ' + r.status);
-    const blob = await r.blob();
-    const today = new Date().toISOString().slice(0,10);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = 'hallo-johor-backup-' + today + '.json';
-    a.click(); URL.revokeObjectURL(url);
-    statusEl.style.background = 'rgba(0,229,160,.07)';
-    statusEl.style.border = '1px solid rgba(0,229,160,.25)';
-    statusEl.style.color = '#00e5a0';
-    statusEl.textContent = 'Backup berhasil diunduh!';
-  } catch(e) {
-    statusEl.style.background = 'rgba(255,77,109,.08)';
-    statusEl.style.border = '1px solid rgba(255,77,109,.2)';
-    statusEl.style.color = '#ff8fa3';
-    statusEl.textContent = 'Gagal: ' + e.message;
-  }
-}
-let restoreFileData = null;
-function previewRestore(input) {
-  if (!input.files[0]) return;
-  document.getElementById('restore-filename').textContent = input.files[0].name;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      JSON.parse(e.target.result); // Validasi JSON
-      restoreFileData = e.target.result;
-      document.getElementById('restore-btn').style.display = 'block';
-    } catch {
-      document.getElementById('restore-status').style.display = 'block';
-      document.getElementById('restore-status').textContent = 'File bukan JSON yang valid';
-      restoreFileData = null;
-    }
-  };
-  reader.readAsText(input.files[0]);
-}
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('drop-zone').style.borderColor = 'var(--border2)';
-  const f = e.dataTransfer.files[0];
-  if (!f) return;
-  document.getElementById('restore-filename').textContent = f.name;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    try {
-      JSON.parse(ev.target.result);
-      restoreFileData = ev.target.result;
-      document.getElementById('restore-btn').style.display = 'block';
-    } catch {
-      showRestoreStatus('error','File bukan JSON yang valid');
-    }
-  };
-  reader.readAsText(f);
-}
-function showRestoreStatus(type, msg) {
-  const el = document.getElementById('restore-status');
-  el.style.display = 'block';
-  if (type === 'ok') { el.style.background='rgba(0,229,160,.07)'; el.style.border='1px solid rgba(0,229,160,.25)'; el.style.color='#00e5a0'; }
-  else if (type === 'error') { el.style.background='rgba(255,77,109,.08)'; el.style.border='1px solid rgba(255,77,109,.2)'; el.style.color='#ff8fa3'; }
-  else { el.style.background='rgba(0,200,255,.07)'; el.style.border='1px solid rgba(0,200,255,.2)'; el.style.color='var(--cyan)'; }
-  el.textContent = msg;
-}
-async function doRestore() {
-  if (!restoreFileData) return;
-  if (!confirm('Data saat ini akan DITIMPA oleh backup ini.\\n\\nLanjutkan restore?')) return;
-  const btn = document.getElementById('restore-btn');
-  btn.disabled = true; btn.textContent = 'Memproses...';
-  showRestoreStatus('info','Mengirim data ke server...');
-  try {
-    const r = await fetch('/api/restore', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: restoreFileData
-    });
-    const d = await r.json();
-    if (!d.ok) throw new Error(d.error || 'Server error');
-    showRestoreStatus('ok', 'Restore berhasil! ' + (d.message || '') + ' Halaman akan dimuat ulang...');
-    setTimeout(() => location.reload(), 2500);
-  } catch(e) {
-    showRestoreStatus('error','Gagal restore: ' + e.message);
-    btn.disabled = false; btn.textContent = 'Restore Sekarang';
-  }
 }
 function filterTable(){
   const q=document.getElementById('search-box').value.toLowerCase();
@@ -936,7 +670,7 @@ function filterTable(){
   });
   document.getElementById('row-count').textContent=vis;
 }
-function esc(s){var r=String(s||'');r=r.replace(/&/g,'&amp;');r=r.replace(/</g,'&lt;');r=r.replace(/>/g,'&gt;');r=r.replace(/\x22/g,'&quot;');return r}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 function showDetail(jsonStr){
   const l=JSON.parse(jsonStr);
   const id='#'+String(l.id||0).padStart(4,'0');
@@ -1034,7 +768,7 @@ function fmtDateClient(iso) {
 
 function buildRow(l) {
   const id='#'+String(l.id||0).padStart(4,'0');
-  const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,'\\\\x27');
+  const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,"\\\\'");
   return '<tr data-kat="'+esc(l.kategori)+'" data-kel="'+esc(l.kelurahan)+'" style="animation:fi .4s ease both">'
     +'<td><span class="id-badge">'+id+'</span></td>'
     +'<td><div class="fw5">'+esc(l.namaPelapor)+'</div><div class="fz12 text-muted">'+esc((l.pelapor||'').replace('@s.whatsapp.net',''))+'</div></td>'
@@ -1082,7 +816,7 @@ evtSource.addEventListener('update', (e) => {
     const allRows = Array.from(overviewTbody.querySelectorAll('tr'));
     newItems.reverse().forEach(l => {
       const id='#'+String(l.id||0).padStart(4,'0');
-      const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,'\\\\x27');
+      const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,"\\\\'");
       const row='<tr style="animation:fi .4s ease both">'
         +'<td><span class="id-badge">'+id+'</span></td>'
         +'<td class="fw5">'+esc(l.namaPelapor)+'</td>'
@@ -1174,7 +908,7 @@ async function addKegiatan() {
     statusEl.className = 'kg-status ok';
     setTimeout(() => { statusEl.className = 'kg-status'; }, 4000);
   } catch(e) {
-    statusEl.textContent = 'Gagal: ' + e.message;
+    statusEl.textContent = '❌ Gagal: ' + e.message;
     statusEl.className = 'kg-status err';
   }
 }
@@ -1264,7 +998,7 @@ async function sendFeedback(laporanId, pelapor, namaPelapor, btn) {
       throw new Error(json.error || 'Gagal');
     }
   } catch(e) {
-    statusEl.textContent = 'Gagal: ' + e.message;
+    statusEl.textContent = '❌ Gagal: ' + e.message;
     statusEl.className = 'fb-status err';
     btn.disabled = false;
     btn.textContent = '📤 Kirim Balasan via WhatsApp';
@@ -1653,33 +1387,6 @@ const server = http.createServer(async (req, res) => {
     if (cookies.session) sessions.delete(cookies.session);
     return send(302, '', 'text/plain', { 'Set-Cookie': 'session=; HttpOnly; Path=/; Max-Age=0', 'Location': '/login' });
   }
-
-  // ── Pairing: PUBLIC routes (tidak perlu login) ───────────
-  if (path_ === '/api/pairing/request' && req.method === 'POST') {
-    try {
-      const body = await parseJSONBody(req);
-      let phone = (body.phone || '').replace(/[^0-9]/g, '');
-      if (!phone) return send(400, JSON.stringify({ ok: false, error: 'Nomor tidak valid' }), 'application/json');
-      if (!phone.startsWith('62')) phone = '62' + phone.replace(/^0/, '');
-      const pairFile = path.join(__dirname, CONFIG.DATA_DIR, 'pairing_request.json');
-      fs.mkdirSync(path.join(__dirname, CONFIG.DATA_DIR), { recursive: true });
-      fs.writeFileSync(pairFile, JSON.stringify({ status: 'pending', phone, requestedAt: new Date().toISOString() }, null, 2));
-      return send(200, JSON.stringify({ ok: true, phone }), 'application/json');
-    } catch (e) {
-      return send(500, JSON.stringify({ ok: false, error: e.message }), 'application/json');
-    }
-  }
-  if (path_ === '/api/pairing/status' && req.method === 'GET') {
-    try {
-      const pairFile = path.join(__dirname, CONFIG.DATA_DIR, 'pairing_request.json');
-      if (!fs.existsSync(pairFile)) return send(200, JSON.stringify({ status: 'idle' }), 'application/json');
-      const d = JSON.parse(fs.readFileSync(pairFile, 'utf8'));
-      return send(200, JSON.stringify(d), 'application/json');
-    } catch {
-      return send(200, JSON.stringify({ status: 'idle' }), 'application/json');
-    }
-  }
-
   if (!authed) return send(302, '', 'text/plain', { 'Location': '/login' });
 
   // ── SSE endpoint ──
@@ -1895,71 +1602,106 @@ const server = http.createServer(async (req, res) => {
     } catch { return send(500, JSON.stringify({ ok: false }), 'application/json'); }
   }
 
-  // ── Backup: download semua data JSON ──────────────────────
-  if (path_ === '/api/backup' && req.method === 'GET') {
-    try {
-      const DATA_FILES = [
-        'laporan_archive.json',
-        'laporan_groups.json',
-        'laporan_counter.json',
-        'group_routing.json',
-        'feedback_queue.json',
-        'livechat_sessions.json',
-        'livechat_replies.json',
-        'kegiatan.json',
-      ];
-      const backup = {
-        version: 2,
-        createdAt: new Date().toISOString(),
-        bot: 'Hallo Johor',
-        data: {}
-      };
-      for (const file of DATA_FILES) {
-        const p = path.join(__dirname, CONFIG.DATA_DIR, file);
-        if (fs.existsSync(p)) {
-          try { backup.data[file] = JSON.parse(fs.readFileSync(p, 'utf8')); } catch { backup.data[file] = {}; }
-        }
-      }
-      const json = JSON.stringify(backup, null, 2);
-      const today = new Date().toISOString().slice(0, 10);
-      res.writeHead(200, {
-        'Content-Type': 'application/json',
-        'Content-Disposition': `attachment; filename="hallo-johor-backup-${today}.json"`,
-        'Content-Length': Buffer.byteLength(json),
-      });
-      return res.end(json);
-    } catch (e) {
-      return send(500, JSON.stringify({ ok: false, error: e.message }), 'application/json');
-    }
-  }
+  // ── Export Auth Credentials (untuk Railway free plan) ──
+  if (path_ === '/export-auth') {
+    const AUTH_DIR = path.join(__dirname, 'auth_info_baileys');
+    let encoded = '';
+    let fileCount = 0;
+    let errorMsg = '';
 
-  // ── Restore: upload backup JSON & tulis ulang ─────────────
-  if (path_ === '/api/restore' && req.method === 'POST') {
-    try {
-      const body = await parseJSONBody(req);
-      if (!body || !body.data) return send(400, JSON.stringify({ ok: false, error: 'Format backup tidak valid (tidak ada field "data")' }), 'application/json');
-      const ALLOWED_FILES = [
-        'laporan_archive.json',
-        'laporan_groups.json',
-        'laporan_counter.json',
-        'group_routing.json',
-        'feedback_queue.json',
-        'livechat_sessions.json',
-        'livechat_replies.json',
-        'kegiatan.json',
-      ];
-      let restored = 0;
-      for (const file of ALLOWED_FILES) {
-        if (body.data[file] !== undefined) {
-          const p = path.join(__dirname, CONFIG.DATA_DIR, file);
-          fs.writeFileSync(p, JSON.stringify(body.data[file], null, 2), 'utf8');
-          restored++;
+    if (!fs.existsSync(AUTH_DIR) || fs.readdirSync(AUTH_DIR).filter(f => fs.statSync(path.join(AUTH_DIR, f)).isFile()).length === 0) {
+      errorMsg = 'Folder auth_info_baileys tidak ditemukan atau kosong. Pastikan bot sudah berhasil pairing terlebih dahulu.';
+    } else {
+      try {
+        const files = {};
+        for (const filename of fs.readdirSync(AUTH_DIR)) {
+          const filePath = path.join(AUTH_DIR, filename);
+          if (!fs.statSync(filePath).isFile()) continue;
+          const content = fs.readFileSync(filePath, 'utf8');
+          try { files[filename] = JSON.parse(content); }
+          catch { files[filename] = content; }
+          fileCount++;
         }
+        encoded = Buffer.from(JSON.stringify(files)).toString('base64');
+      } catch (e) {
+        errorMsg = 'Gagal membaca credentials: ' + e.message;
       }
-      return send(200, JSON.stringify({ ok: true, message: `${restored} file berhasil dipulihkan.` }), 'application/json');
-    } catch (e) {
-      return send(500, JSON.stringify({ ok: false, error: e.message }), 'application/json');
     }
+
+    const html = `<!DOCTYPE html>
+<html lang="id"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Export Auth — Hallo Johor</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#040d1a;--card:#0e1e38;--border:#1a3356;--cyan:#00c8ff;--green:#00e5a0;--text:#e2eaf5;--muted:#4a6a8a;--red:#ff4d6d}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;padding:32px 16px}
+.wrap{max-width:780px;margin:0 auto}
+h1{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-bottom:4px;background:linear-gradient(135deg,#fff 30%,var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px}
+.card h2{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;margin-bottom:14px;color:var(--cyan)}
+.badge{display:inline-block;background:rgba(0,229,160,.12);color:var(--green);border:1px solid rgba(0,229,160,.25);border-radius:8px;padding:4px 12px;font-size:12px;font-weight:500;margin-bottom:16px}
+.err{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);color:#ff8fa3;border-radius:10px;padding:14px;font-size:14px}
+textarea{width:100%;background:#060f22;border:1px solid var(--border);border-radius:10px;padding:14px;color:#6dd5ed;font-family:'Courier New',monospace;font-size:11px;line-height:1.5;resize:none;outline:none;height:160px;word-break:break-all}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:linear-gradient(135deg,#0090c8,var(--cyan));border:none;border-radius:10px;color:#040d1a;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:opacity .2s;text-decoration:none}
+.btn:hover{opacity:.85}
+.btn-back{background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'DM Sans',sans-serif;font-size:13px;margin-right:10px}
+.steps{list-style:none;counter-reset:step}
+.steps li{counter-increment:step;display:flex;gap:12px;margin-bottom:12px;font-size:13px;color:var(--text)}
+.steps li::before{content:counter(step);min-width:24px;height:24px;background:rgba(0,200,255,.15);border:1px solid rgba(0,200,255,.3);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--cyan);flex-shrink:0;margin-top:1px}
+.steps li code{background:#0d1f3c;padding:1px 7px;border-radius:5px;font-size:12px;color:var(--cyan)}
+.warn{font-size:12px;color:var(--muted);margin-top:14px;padding:12px;background:rgba(255,200,0,.06);border:1px solid rgba(255,200,0,.15);border-radius:8px;line-height:1.6}
+</style></head><body>
+<div class="wrap">
+  <div style="margin-bottom:20px"><a href="/" class="btn btn-back">← Kembali ke Dashboard</a></div>
+  <h1>🔑 Export Auth Credentials</h1>
+  <p class="sub">Untuk Railway free plan — salin string ini ke Variables agar bot tidak perlu pairing ulang saat redeploy.</p>
+
+  ${errorMsg ? `<div class="card"><div class="err">⚠️ ${esc(errorMsg)}</div></div>` : `
+  <div class="card">
+    <h2>📦 AUTH_CREDS</h2>
+    <div class="badge">✓ ${fileCount} file credentials terbaca</div>
+    <textarea id="credsBox" readonly>${encoded}</textarea>
+    <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn" onclick="copyIt()">📋 Salin AUTH_CREDS</button>
+      <span id="copyMsg" style="display:none;align-self:center;font-size:13px;color:var(--green)">✓ Tersalin!</span>
+    </div>
+    <div class="warn">
+      ⚠️ <strong>Jangan bagikan string ini ke siapapun</strong> — berisi kunci akses WhatsApp bot kamu.<br>
+      Jangan commit ke GitHub. Simpan hanya di Railway Variables.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 Cara Pakai</h2>
+    <ol class="steps">
+      <li>Klik tombol <strong>Salin AUTH_CREDS</strong> di atas</li>
+      <li>Buka <strong>Railway Dashboard</strong> → pilih service bot</li>
+      <li>Klik tab <strong>Variables</strong> → <strong>+ New Variable</strong></li>
+      <li>Isi Name: <code>AUTH_CREDS</code> · Value: paste string yang disalin</li>
+      <li>Klik <strong>Save</strong> → Railway akan otomatis redeploy</li>
+      <li>Bot langsung terhubung tanpa perlu pairing ulang ✅</li>
+    </ol>
+  </div>
+  `}
+</div>
+<script>
+function copyIt() {
+  const box = document.getElementById('credsBox');
+  box.select();
+  box.setSelectionRange(0, 99999);
+  navigator.clipboard.writeText(box.value).then(() => {
+    const msg = document.getElementById('copyMsg');
+    msg.style.display = 'inline';
+    setTimeout(() => msg.style.display = 'none', 2500);
+  });
+}
+</script>
+</body></html>`;
+
+    res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+    return res.end(html);
   }
 
   // ── Export Excel ──
