@@ -530,6 +530,7 @@ const handleLaporanFlow = async (sock, jid, name, msg, session, { textMsg, image
         `📝 *Uraian:*\n${session.isiLaporan}\n\n` +
         `━━━━━━━━━━━━━━━━━━━━━━━\n` +
         `Laporan Anda telah diteruskan ke petugas terkait.\n` +
+        `Estimasi tindak lanjut : *2x24jam*\n` +
         `Terima kasih telah berpartisipasi menjaga Kecamatan Medan Johor! 🙏\n` +
         `🏙️ *#MEDANUNTUKSEMUA*\n\n` +
         `Ketik *menu* untuk kembali ke menu utama.`
