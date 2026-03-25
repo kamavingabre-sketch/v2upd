@@ -459,7 +459,7 @@ Pintar Johor adalah platform perpustakaan digital interaktif pertama milik Kecam
 
 ━━━━━━━━━━━━━━━━━━━━━━━
 🌐 *Akses Sekarang:*
-🔗 https://pintarjohor.vercel.app
+🔗  https://bit.ly/pintarjohor
 
 ━━━━━━━━━━━━━━━━━━━━━━━
 🏙️ *#MEDANUNTUKSEMUA | #PINTARJOHOR*
@@ -487,7 +487,7 @@ Kegiatan Safari Jumat, pengajian akbar, dan kegiatan keagamaan rutin lintas kelu
 📚 *PINTAR JOHOR*
 (Perpustakaan Interaktif Digital Rakyat Johor)
 Platform literasi digital pertama Kecamatan Medan Johor. Warga dapat mengakses artikel, materi edukasi, informasi program, dan konten bermanfaat lainnya secara gratis dari HP atau komputer.
-🔗 https://pintarjohor.vercel.app
+🔗 https://bit.ly/pintarjohor
 
 ━━━━━━━━━━━━━━━━━━━━━━━
 📞 Info lebih lanjut:
