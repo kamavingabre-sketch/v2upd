@@ -28,8 +28,8 @@ Halo! Saya siap membantu Anda dengan berbagai layanan administrasi kecamatan.
 5️⃣ *Kontak & Jam Pelayanan*
    › Nomor & alamat kantor
 
-6️⃣ *Download Formulir*
-   › Unduh formulir administrasi
+6️⃣ *Pintar Johor* 📚
+   › Perpustakaan Interaktif Digital Rakyat Johor
 
 7️⃣ *Program Kecamatan*
    › RELASI JOHOR, SIGAP JOHOR, UMKM
@@ -434,73 +434,37 @@ Sabtu - Minggu: TUTUP
 🏙️ *#MEDANUNTUKSEMUA*
 Ketik *0* untuk kembali ke menu`;
 
-export const MENU_FORMULIR = `📥 *DOWNLOAD FORMULIR*
+export const MENU_PINTAR_JOHOR = `📚 *PINTAR JOHOR*
+_Perpustakaan Interaktif Digital Rakyat Johor_
 ━━━━━━━━━━━━━━━━━━━━━━━
 
-Formulir tersedia untuk diunduh:
+✨ *Inovasi Digital untuk Warga Medan Johor!*
 
-📄 *F1* — Formulir Surat Keterangan
-📄 *F2* — Formulir Pengantar Administrasi
-📄 *F3* — Formulir Pengaduan Masyarakat
+🧠 *Apa itu Pintar Johor?*
+Pintar Johor adalah platform perpustakaan digital interaktif pertama milik Kecamatan Medan Johor — dirancang untuk mencerdaskan warga dengan cara yang mudah, menyenangkan, dan bisa diakses dari mana saja, kapan saja!
+
+📖 *Fitur Unggulan:*
+📰 Baca artikel & berita lokal terkini
+🎓 Materi edukasi warga & kesehatan
+📋 Informasi program & kebijakan kecamatan
+💡 Tips kehidupan sehari-hari
+🏛️ Arsip sejarah & budaya Medan Johor
+🔍 Pencarian cerdas berbasis AI
+
+🌟 *Mengapa Pintar Johor?*
+✅ Gratis untuk seluruh warga Johor
+✅ Bisa diakses via HP maupun komputer
+✅ Konten terus diperbarui
+✅ Ramah untuk semua usia
 
 ━━━━━━━━━━━━━━━━━━━━━━━
-💡 Ketik *F1 / F2 / F3* untuk mendapatkan link download
-
-Atau kunjungi langsung:
-🌐 *medanjohor.pemkomedan.go.id*
-
-📞 Butuh bantuan? Hubungi:
-📱 0813-6777-2047
+🌐 *Akses Sekarang:*
+🔗 https://pintarjohor.vercel.app
 
 ━━━━━━━━━━━━━━━━━━━━━━━
-🏙️ *#MEDANUNTUKSEMUA*
+🏙️ *#MEDANUNTUKSEMUA | #PINTARJOHOR*
+_Warga Cerdas, Kecamatan Maju!_
 Ketik *0* untuk kembali ke menu`;
-
-export const FORMULIR_LINKS = {
-  F1: `📄 *Formulir Surat Keterangan*
-
-🔗 Link Download:
-https://drive.google.com/formulir-surat-keterangan
-
-📌 *Petunjuk:*
-1. Download formulir
-2. Isi dengan lengkap dan benar
-3. Bawa ke kantor kelurahan
-4. Serahkan bersama persyaratan lainnya
-
-━━━━━━━━━━━━━━━━━━━━━━━
-Ketik *0* untuk kembali ke menu`,
-
-  F2: `📄 *Formulir Pengantar Administrasi*
-
-🔗 Link Download:
-https://drive.google.com/formulir-pengantar-administrasi
-
-📌 *Petunjuk:*
-1. Download formulir
-2. Isi nama, NIK, dan keperluan
-3. Minta tanda tangan RT/RW
-4. Bawa ke kantor kelurahan
-
-━━━━━━━━━━━━━━━━━━━━━━━
-Ketik *0* untuk kembali ke menu`,
-
-  F3: `📄 *Formulir Pengaduan Masyarakat*
-
-🔗 Link Download:
-https://drive.google.com/formulir-pengaduan
-
-📌 *Petunjuk:*
-1. Download formulir
-2. Isi data diri dan uraian pengaduan
-3. Lampirkan foto bukti (jika ada)
-4. Serahkan ke kantor kecamatan
-
-💡 *Lebih mudah:* Gunakan menu Pengaduan di bot ini langsung!
-
-━━━━━━━━━━━━━━━━━━━━━━━
-Ketik *0* untuk kembali ke menu`
-};
 
 export const MENU_PROGRAM = `🌟 *PROGRAM UNGGULAN KECAMATAN MEDAN JOHOR*
 ━━━━━━━━━━━━━━━━━━━━━━━
@@ -519,6 +483,11 @@ Pendampingan dan pelatihan bagi pelaku usaha mikro, kecil, dan menengah di wilay
 
 🕌 *PROGRAM KEAGAMAAN KECAMATAN*
 Kegiatan Safari Jumat, pengajian akbar, dan kegiatan keagamaan rutin lintas kelurahan.
+
+📚 *PINTAR JOHOR*
+(Perpustakaan Interaktif Digital Rakyat Johor)
+Platform literasi digital pertama Kecamatan Medan Johor. Warga dapat mengakses artikel, materi edukasi, informasi program, dan konten bermanfaat lainnya secara gratis dari HP atau komputer.
+🔗 https://pintarjohor.vercel.app
 
 ━━━━━━━━━━━━━━━━━━━━━━━
 📞 Info lebih lanjut:

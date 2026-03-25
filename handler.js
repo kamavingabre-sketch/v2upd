@@ -25,8 +25,8 @@ import {
   MENU_UTAMA, MENU_IMAGE_URL,
   MENU_PERSYARATAN, PERSYARATAN,
   MENU_PBB, MENU_KONTAK,
-  MENU_FORMULIR, FORMULIR_LINKS,
   MENU_PROGRAM, MENU_PARIWISATA, WISATA,
+  MENU_PINTAR_JOHOR,
   KATEGORI_PENGADUAN, KELURAHAN_LIST,
   buildKategoriMenu, buildKelurahanMenu
 } from './menu.js';
@@ -230,8 +230,8 @@ export const handleMessage = async (sock, msg) => {
       break;
 
     case '6':
-      await sendText(sock, senderJid, MENU_FORMULIR);
-      logger.send(senderJid, 'Menu Formulir');
+      await sendText(sock, senderJid, MENU_PINTAR_JOHOR);
+      logger.send(senderJid, 'Menu Pintar Johor');
       break;
 
     case '7':
@@ -298,17 +298,6 @@ export const handleMessage = async (sock, msg) => {
       if (PERSYARATAN[key]) {
         await sendText(sock, senderJid, PERSYARATAN[key]);
         logger.send(senderJid, `Persyaratan Surat kode ${key}`);
-      }
-      break;
-    }
-
-    case 'F1': case 'f1':
-    case 'F2': case 'f2':
-    case 'F3': case 'f3': {
-      const key = textMsg.toUpperCase();
-      if (FORMULIR_LINKS[key]) {
-        await sendText(sock, senderJid, FORMULIR_LINKS[key]);
-        logger.send(senderJid, `Link formulir ${key}`);
       }
       break;
     }
