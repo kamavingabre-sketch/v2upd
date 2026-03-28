@@ -714,7 +714,7 @@ function showDetail(jsonStr){
   const curStatus = l.status || 'terkirim';
   const statusOpts = ['terkirim','diproses','selesai','ditolak'].map(s => {
     const m = {terkirim:'📨 Terkirim',diproses:'⚙️ Diproses',selesai:'✅ Selesai',ditolak:'❌ Ditolak'};
-    return `<option value="${s}"${s===curStatus?' selected':''}>${m[s]}</option>`;
+    return '<option value="' + s + '"' + (s===curStatus?' selected':'') + '>' + m[s] + '</option>';
   }).join('');
   html+='<div class="fb-box" style="padding:14px 16px">'
     +'<div class="fb-title" style="margin-bottom:10px">🔄 Ubah Status Laporan</div>'
