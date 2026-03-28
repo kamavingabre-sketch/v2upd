@@ -19,7 +19,7 @@ import {
   getNextLaporanId, saveLaporan,
   getGroupRouting,
   getLivechatByJid, startLivechatSession, addLivechatMessage, closeLivechatSession,
-  buildKegiatanMenu
+  buildKegiatanMenu, buildStatusLaporan
 } from './store.js';
 import {
   MENU_UTAMA, MENU_IMAGE_URL,
@@ -243,6 +243,13 @@ export const handleMessage = async (sock, msg) => {
       await sendText(sock, senderJid, MENU_PARIWISATA);
       logger.send(senderJid, 'Menu Wisata Medan Johor');
       break;
+
+    case '10': {
+      const statusMsg = buildStatusLaporan(senderJid);
+      await sendText(sock, senderJid, statusMsg);
+      logger.send(senderJid, 'Cek Status Laporan');
+      break;
+    }
 
     case '9': {
       const existing = getLivechatByJid(senderJid);

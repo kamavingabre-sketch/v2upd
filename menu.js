@@ -40,8 +40,11 @@ Halo! Saya siap membantu Anda dengan berbagai layanan administrasi kecamatan.
 9️⃣ *LiveChat Admin*
    › Chat langsung dengan petugas kecamatan
 
+🔟 *Cek Status Laporan Saya*
+   › Lihat riwayat & status laporan yang pernah dikirim
+
 ━━━━━━━━━━━━━━━━━━━━━━━
-💡 Ketik *angka menu* (1-9) untuk memilih
+💡 Ketik *angka menu* (1-10) untuk memilih
 ━━━━━━━━━━━━━━━━━━━━━━━
 🏙️ *#MEDANUNTUKSEMUA*
 _Hallo Johor — Hadir untuk Warga Medan Johor_`;

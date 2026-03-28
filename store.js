@@ -317,6 +317,69 @@ export const buildKegiatanMenu = () => {
   return text;
 };
 
+// ── Laporan By JID ───────────────────────────
+// Ambil semua laporan milik satu user berdasarkan JID pelapor
+export const getLaporanByJid = (jid) => {
+  const data = readJSON('laporan_archive.json');
+  if (!data.laporan) return [];
+  return data.laporan
+    .filter(l => l.pelapor === jid)
+    .sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+};
+
+// ── Build Pesan Status Laporan ────────────────
+const STATUS_BADGE = {
+  terkirim:    '📨 Terkirim',
+  diproses:    '⚙️ Sedang Diproses',
+  selesai:     '✅ Selesai',
+  ditolak:     '❌ Ditolak',
+};
+
+export const buildStatusLaporan = (jid) => {
+  const list = getLaporanByJid(jid);
+  const total = list.length;
+
+  let text = `📋 *STATUS LAPORAN SAYA*\n`;
+  text += `━━━━━━━━━━━━━━━━━━━━━━━\n\n`;
+
+  if (total === 0) {
+    text += `📭 *Anda belum pernah mengirimkan laporan.*\n\n`;
+    text += `Gunakan menu *2 – Pengaduan Masyarakat* untuk melaporkan masalah di wilayah Anda.\n`;
+  } else {
+    text += `📊 Total laporan Anda: *${total} laporan*\n\n`;
+
+    // Tampilkan maks 5 laporan terbaru agar pesan tidak terlalu panjang
+    const tampil = list.slice(0, 5);
+    tampil.forEach((l, i) => {
+      const tgl = new Date(l.tanggal).toLocaleString('id-ID', {
+        timeZone: 'Asia/Jakarta',
+        day: '2-digit', month: 'long', year: 'numeric',
+        hour: '2-digit', minute: '2-digit',
+      });
+      const badge = STATUS_BADGE[l.status] || `📌 ${l.status}`;
+      text += `${i + 1}. 📋 *No. #${String(l.id).padStart(4, '0')}*\n`;
+      text += `   ${badge}\n`;
+      text += `   🗂 ${l.kategori} — ${l.kelurahan}\n`;
+      text += `   📅 ${tgl}\n`;
+      if (l.isi) {
+        const cuplikan = l.isi.length > 60 ? l.isi.slice(0, 60) + '…' : l.isi;
+        text += `   📝 _${cuplikan}_\n`;
+      }
+      text += `\n`;
+    });
+
+    if (total > 5) {
+      text += `_...dan ${total - 5} laporan lainnya_\n\n`;
+    }
+  }
+
+  text += `━━━━━━━━━━━━━━━━━━━━━━━\n`;
+  text += `💡 Estimasi tindak lanjut setiap laporan: *2×24 jam*\n`;
+  text += `📞 Pertanyaan lebih lanjut: *0813-6777-2047*\n\n`;
+  text += `Ketik *menu* untuk kembali ke menu utama.`;
+  return text;
+};
+
 // ── Delete Laporan ────────────────────────────
 export const deleteLaporan = (id) => {
   const data = readJSON('laporan_archive.json');
