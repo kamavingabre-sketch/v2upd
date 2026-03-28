@@ -16,7 +16,7 @@ import pino from 'pino';
 import readline from 'readline';
 import fs from 'fs';
 import { handleMessage } from './handler.js';
-import { getPendingFeedbacks, markFeedbackDone, getPendingLivechatReplies, markLivechatReplyDone, addLivechatMessage, closeLivechatSession } from './store.js';
+import { getPendingFeedbacks, markFeedbackDone, getPendingLivechatReplies, markLivechatReplyDone, addLivechatMessage, closeLivechatSession, getPendingStatusNotifs, markStatusNotifDone } from './store.js';
 import logger from './logger.js';
 
 // ─── Configuration ────────────────────────────────────────
@@ -75,6 +75,7 @@ function restoreAuthFromEnv() {
 // Poll feedback_queue.json setiap 5 detik, kirim WA ke pelapor
 let feedbackInterval = null;
 let livechatReplyInterval = null;
+let statusNotifInterval = null;
 
 function startFeedbackWorker(sock) {
   // Bersihkan interval lama jika ada (reconnect)
@@ -123,6 +124,59 @@ function startFeedbackWorker(sock) {
   }, 5000);
 
   logger.info('FEEDBACK', '📬 Feedback worker aktif (poll setiap 5 detik)');
+}
+
+// ─── Status Notif Worker ───────────────────────────────────
+// Poll status_notif_queue.json setiap 5 detik
+// Kirim notifikasi WA otomatis ke pelapor saat admin ubah status
+function startStatusNotifWorker(sock) {
+  if (statusNotifInterval) clearInterval(statusNotifInterval);
+
+  statusNotifInterval = setInterval(async () => {
+    let pending;
+    try { pending = getPendingStatusNotifs(); }
+    catch { return; }
+
+    for (const notif of pending) {
+      try {
+        const jid = notif.pelapor.includes('@') ? notif.pelapor : `${notif.pelapor}@s.whatsapp.net`;
+        const noLaporan = String(notif.laporanId || '').padStart(4, '0');
+
+        const STATUS_TEXT = {
+          terkirim: '📨 *Terkirim* — laporan Anda telah diterima dan sedang menunggu tindak lanjut.',
+          diproses: '⚙️ *Sedang Diproses* — petugas sedang menangani laporan Anda.',
+          selesai:  '✅ *Selesai* — laporan Anda telah selesai ditindaklanjuti.',
+          ditolak:  '❌ *Ditolak* — laporan Anda tidak dapat diproses.',
+        };
+
+        const statusText = STATUS_TEXT[notif.statusBaru] || `📌 *${notif.statusBaru}*`;
+
+        const text =
+          `📋 *PEMBARUAN STATUS LAPORAN*\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━━\n\n` +
+          `Halo ${notif.namaPelapor || 'Bapak/Ibu'}, status laporan Anda telah diperbarui:\n\n` +
+          `📋 *No. Laporan:* #${noLaporan}\n` +
+          `🗂 *Kategori:* ${notif.kategori}\n` +
+          `🏘️ *Kelurahan:* ${notif.kelurahan}\n\n` +
+          `🔄 *Status Terbaru:*\n${statusText}\n\n` +
+          `━━━━━━━━━━━━━━━━━━━━━━━\n` +
+          `Ketik *10* untuk melihat semua laporan Anda.\n` +
+          `_Hallo Johor — Kecamatan Medan Johor_ 🏙️`;
+
+        await sock.sendMessage(jid, { text });
+        markStatusNotifDone(notif.id, 'done');
+        logger.success('STATUS', `Notifikasi terkirim ke ${jid}`, `Laporan #${noLaporan} → ${notif.statusBaru}`);
+
+      } catch (err) {
+        markStatusNotifDone(notif.id, 'failed');
+        logger.error('STATUS', `Gagal kirim notifikasi ke ${notif.pelapor}`, err.message);
+      }
+
+      await delay(1500);
+    }
+  }, 5000);
+
+  logger.info('STATUS', '🔔 Status notif worker aktif (poll setiap 5 detik)');
 }
 
 // ─── LiveChat Reply Worker ─────────────────────────────────
@@ -285,6 +339,7 @@ async function startBot() {
       logger.info('READY', 'Ketik Ctrl+C untuk menghentikan bot');
       logger.divider();
       startFeedbackWorker(sock);
+      startStatusNotifWorker(sock);
       startLivechatReplyWorker(sock);
     }
 

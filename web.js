@@ -10,7 +10,7 @@ import fs from 'fs';
 import path from 'path';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
-import { queueFeedback, getLivechatSessions, addLivechatMessage, closeLivechatSessionById, markLivechatRead, queueLivechatReply, addLaporanGroup, removeLaporanGroup, getGroupRouting, setGroupRouting, deleteLaporan, getKegiatan, addKegiatan, deleteKegiatan } from './store.js';
+import { queueFeedback, getLivechatSessions, addLivechatMessage, closeLivechatSessionById, markLivechatRead, queueLivechatReply, addLaporanGroup, removeLaporanGroup, getGroupRouting, setGroupRouting, deleteLaporan, updateLaporanStatus, getLaporanById, queueStatusNotif, getKegiatan, addKegiatan, deleteKegiatan } from './store.js';
 import { KATEGORI_PENGADUAN } from './menu.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -77,6 +77,17 @@ const readJSON = (file) => {
 const getLaporan = () => {
   const d = readJSON('laporan_archive.json');
   return (d.laporan || []).sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+};
+
+const STATUS_META = {
+  terkirim: { label: 'Terkirim',       color: '#60a5fa', bg: 'rgba(96,165,250,.15)',  icon: '📨' },
+  diproses: { label: 'Diproses',       color: '#fbbf24', bg: 'rgba(251,191,36,.15)',  icon: '⚙️' },
+  selesai:  { label: 'Selesai',        color: '#34d399', bg: 'rgba(52,211,153,.15)',  icon: '✅' },
+  ditolak:  { label: 'Ditolak',        color: '#f87171', bg: 'rgba(248,113,113,.15)', icon: '❌' },
+};
+const statusBadgeHtml = (status) => {
+  const m = STATUS_META[status] || { label: status||'-', color:'#94a3b8', bg:'rgba(148,163,184,.15)', icon:'📌' };
+  return `<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:${m.bg};color:${m.color};border:1px solid ${m.color}33">${m.icon} ${m.label}</span>`;
 };
 const getGroups = () => (readJSON('laporan_groups.json').groups || []);
 const esc = (s) => String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -170,6 +181,7 @@ const pageDashboard = (laporan, groups, routing = {}, kegiatan = []) => {
       <td><span class="kat-tag">${esc(l.kategori)}</span></td>
       <td>${esc(l.kelurahan)}</td>
       <td class="fz13 text-muted2" style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(l.isi)}">${esc((l.isi||'').substring(0,60))}${(l.isi||'').length>60?'…':''}</td>
+      <td>${statusBadgeHtml(l.status)}</td>
       <td><a class="map-link" href="https://maps.google.com/?q=${l.koordinat?.lat||0},${l.koordinat?.lon||0}" target="_blank">📍 Peta</a></td>
       <td class="fz12 text-muted2">${fmtDate(l.tanggal)}</td>
       <td style="white-space:nowrap"><button class="det-btn" onclick='showDetail(${JSON.stringify(JSON.stringify(l))})'>Detail</button><button class="del-lap-btn" data-id="${l.id}" onclick="deleteLaporanRow(this.dataset.id,this)">🗑️</button></td>
@@ -495,8 +507,8 @@ textarea.kg-input{resize:vertical;min-height:72px}
           </div>
         </div>
         <div class="tbl-wrap"><table>
-          <thead><tr><th>No</th><th>Pelapor</th><th>Kategori</th><th>Kelurahan</th><th>Isi Laporan</th><th>Lokasi</th><th>Waktu</th><th></th></tr></thead>
-          <tbody id="table-body">${rows || '<tr><td colspan="8" class="empty-row">Belum ada laporan masuk</td></tr>'}</tbody>
+          <thead><tr><th>No</th><th>Pelapor</th><th>Kategori</th><th>Kelurahan</th><th>Isi Laporan</th><th>Status</th><th>Lokasi</th><th>Waktu</th><th></th></tr></thead>
+          <tbody id="table-body">${rows || '<tr><td colspan="9" class="empty-row">Belum ada laporan masuk</td></tr>'}</tbody>
         </table></div>
       </div>
     </div>
@@ -696,6 +708,26 @@ function showDetail(jsonStr){
   } else {
     html+=row('Foto Bukti','<div class="no-img">📷 Foto tidak tersedia untuk laporan ini</div>');
   }
+
+  // ── Ubah Status Laporan ──
+  html+='<hr class="detail-divider">';
+  const curStatus = l.status || 'terkirim';
+  const statusOpts = ['terkirim','diproses','selesai','ditolak'].map(s => {
+    const m = {terkirim:'📨 Terkirim',diproses:'⚙️ Diproses',selesai:'✅ Selesai',ditolak:'❌ Ditolak'};
+    return `<option value="${s}"${s===curStatus?' selected':''}>${m[s]}</option>`;
+  }).join('');
+  html+='<div class="fb-box" style="padding:14px 16px">'
+    +'<div class="fb-title" style="margin-bottom:10px">🔄 Ubah Status Laporan</div>'
+    +'<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">'
+    +'<select id="status-sel-'+l.id+'" style="flex:1;min-width:160px;background:var(--bg3);border:1px solid var(--border2);border-radius:8px;padding:9px 12px;color:var(--text);font-family:\'DM Sans\',sans-serif;font-size:13px;outline:none">'+statusOpts+'</select>'
+    +'<button onclick="updateLaporanStatus('+l.id+',this)" style="background:var(--accent);border:none;border-radius:8px;padding:9px 18px;color:#fff;font-family:\'DM Sans\',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap">Simpan Status</button>'
+    +'</div>'
+    +'<label style="display:inline-flex;align-items:center;gap:7px;margin-top:10px;font-size:12px;color:var(--text2);cursor:pointer">'
+    +'<input type="checkbox" id="status-notify-'+l.id+'" checked style="width:14px;height:14px;accent-color:var(--accent);cursor:pointer">'
+    +'Kirim notifikasi WhatsApp ke pelapor'
+    +'</label>'
+    +'<div id="status-msg-'+l.id+'" style="display:none;margin-top:10px;font-size:12px;padding:8px 12px;border-radius:7px"></div>'
+    +'</div>';
 
   // ── Form Feedback ke Pelapor ──
   html+='<hr class="detail-divider">';
@@ -1274,6 +1306,66 @@ async function deleteLaporanRow(laporanId, btn) {
   } catch(e) { alert('Error: ' + e.message); }
 }
 
+async function updateLaporanStatus(laporanId, btn) {
+  const sel = document.getElementById('status-sel-' + laporanId);
+  const msgEl = document.getElementById('status-msg-' + laporanId);
+  const notifyChk = document.getElementById('status-notify-' + laporanId);
+  if (!sel || !msgEl) return;
+  const status = sel.value;
+  const notify = notifyChk ? notifyChk.checked : true;
+  btn.disabled = true;
+  btn.textContent = 'Menyimpan...';
+  try {
+    const res = await fetch('/api/laporan/status', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: laporanId, status, notify })
+    });
+    const json = await res.json();
+    if (json.ok) {
+      msgEl.style.display = 'block';
+      msgEl.style.background = 'rgba(52,211,153,.12)';
+      msgEl.style.border = '1px solid rgba(52,211,153,.3)';
+      msgEl.style.color = '#34d399';
+      msgEl.textContent = notify
+        ? '✅ Status diperbarui! Notifikasi WhatsApp diantrekan.'
+        : '✅ Status berhasil diperbarui!';
+      // Update badge di baris tabel
+      const STATUS_MAP = { terkirim:'📨 Terkirim', diproses:'⚙️ Diproses', selesai:'✅ Selesai', ditolak:'❌ Ditolak' };
+      const COLOR_MAP  = { terkirim:'#60a5fa', diproses:'#fbbf24', selesai:'#34d399', ditolak:'#f87171' };
+      const BG_MAP     = { terkirim:'rgba(96,165,250,.15)', diproses:'rgba(251,191,36,.15)', selesai:'rgba(52,211,153,.15)', ditolak:'rgba(248,113,113,.15)' };
+      const label = STATUS_MAP[status] || status;
+      const color = COLOR_MAP[status] || '#94a3b8';
+      const bg    = BG_MAP[status]    || 'rgba(148,163,184,.15)';
+      const newBadge = \`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:\${bg};color:\${color};border:1px solid \${color}33">\${label}</span>\`;
+      document.querySelectorAll('#table-body tr').forEach(row => {
+        const detBtn = row.querySelector('.det-btn');
+        if (detBtn && detBtn.getAttribute('onclick') && detBtn.getAttribute('onclick').includes('"id":' + laporanId + ',')) {
+          // kolom status adalah kolom ke-6 (index 5)
+          const cells = row.querySelectorAll('td');
+          if (cells[5]) cells[5].innerHTML = newBadge;
+        }
+      });
+      setTimeout(() => { msgEl.style.display = 'none'; }, 3000);
+    } else {
+      msgEl.style.display = 'block';
+      msgEl.style.background = 'rgba(248,113,113,.12)';
+      msgEl.style.border = '1px solid rgba(248,113,113,.3)';
+      msgEl.style.color = '#f87171';
+      msgEl.textContent = '❌ Gagal: ' + (json.error || 'Terjadi kesalahan');
+    }
+  } catch(e) {
+    msgEl.style.display = 'block';
+    msgEl.style.background = 'rgba(248,113,113,.12)';
+    msgEl.style.border = '1px solid rgba(248,113,113,.3)';
+    msgEl.style.color = '#f87171';
+    msgEl.textContent = '❌ Error: ' + e.message;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Simpan Status';
+  }
+}
+
 // ── Routing ────────────────────────────────────────────────
 async function saveRouting() {
   const status = document.getElementById('routing-status');
@@ -1480,6 +1572,36 @@ const server = http.createServer(async (req, res) => {
       const deleted = deleteLaporan(id);
       if (!deleted) return send(404, JSON.stringify({ ok: false, error: 'Laporan tidak ditemukan' }), 'application/json');
       return send(200, JSON.stringify({ ok: true }), 'application/json');
+    } catch (err) {
+      return send(500, JSON.stringify({ ok: false, error: err.message }), 'application/json');
+    }
+  }
+
+  // ── API: Update Status Laporan ──
+  if (path_ === '/api/laporan/status' && req.method === 'POST') {
+    try {
+      const body = await parseJSONBody(req);
+      const { id, status, notify = true } = body;
+      if (!id || !status) return send(400, JSON.stringify({ ok: false, error: 'id dan status diperlukan' }), 'application/json');
+      const VALID = ['terkirim', 'diproses', 'selesai', 'ditolak'];
+      if (!VALID.includes(status)) return send(400, JSON.stringify({ ok: false, error: 'Status tidak valid. Pilih: ' + VALID.join(', ') }), 'application/json');
+      const updated = updateLaporanStatus(id, status);
+      if (!updated) return send(404, JSON.stringify({ ok: false, error: 'Laporan tidak ditemukan' }), 'application/json');
+      // Antrekan notifikasi WA ke pelapor jika diminta
+      if (notify) {
+        const lap = getLaporanById(id);
+        if (lap?.pelapor) {
+          queueStatusNotif({
+            laporanId: id,
+            pelapor: lap.pelapor,
+            namaPelapor: lap.namaPelapor || 'Bapak/Ibu',
+            kategori: lap.kategori || '-',
+            kelurahan: lap.kelurahan || '-',
+            statusBaru: status,
+          });
+        }
+      }
+      return send(200, JSON.stringify({ ok: true, status }), 'application/json');
     } catch (err) {
       return send(500, JSON.stringify({ ok: false, error: err.message }), 'application/json');
     }

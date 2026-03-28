@@ -82,6 +82,11 @@ export const saveLaporan = (laporan) => {
   writeJSON('laporan_archive.json', data);
 };
 
+export const getLaporanById = (id) => {
+  const data = readJSON('laporan_archive.json');
+  return (data.laporan || []).find(l => String(l.id) === String(id)) || null;
+};
+
 // ── Feedback Queue ────────────────────────────
 // Status: 'pending' | 'done' | 'failed'
 export const queueFeedback = (item) => {
@@ -110,6 +115,37 @@ export const markFeedbackDone = (id, status = 'done') => {
     item.status = status;
     item.sentAt = new Date().toISOString();
     writeJSON('feedback_queue.json', data);
+  }
+};
+
+// ── Status Notification Queue ─────────────────
+// Antrian notifikasi WA otomatis saat admin ubah status laporan
+export const queueStatusNotif = (item) => {
+  const data = readJSON('status_notif_queue.json');
+  if (!data.queue) data.queue = [];
+  data.queue.push({
+    id: `sn_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+    status: 'pending',
+    createdAt: new Date().toISOString(),
+    sentAt: null,
+    ...item,
+  });
+  writeJSON('status_notif_queue.json', data);
+};
+
+export const getPendingStatusNotifs = () => {
+  const data = readJSON('status_notif_queue.json');
+  return (data.queue || []).filter(n => n.status === 'pending');
+};
+
+export const markStatusNotifDone = (id, status = 'done') => {
+  const data = readJSON('status_notif_queue.json');
+  if (!data.queue) return;
+  const item = data.queue.find(n => n.id === id);
+  if (item) {
+    item.status = status;
+    item.sentAt = new Date().toISOString();
+    writeJSON('status_notif_queue.json', data);
   }
 };
 
@@ -378,6 +414,20 @@ export const buildStatusLaporan = (jid) => {
   text += `📞 Pertanyaan lebih lanjut: *0813-6777-2047*\n\n`;
   text += `Ketik *menu* untuk kembali ke menu utama.`;
   return text;
+};
+
+// ── Update Status Laporan ─────────────────────
+export const updateLaporanStatus = (id, status) => {
+  const VALID = ['terkirim', 'diproses', 'selesai', 'ditolak'];
+  if (!VALID.includes(status)) return false;
+  const data = readJSON('laporan_archive.json');
+  if (!data.laporan) return false;
+  const item = data.laporan.find(l => String(l.id) === String(id));
+  if (!item) return false;
+  item.status = status;
+  item.statusUpdatedAt = new Date().toISOString();
+  writeJSON('laporan_archive.json', data);
+  return true;
 };
 
 // ── Delete Laporan ────────────────────────────
