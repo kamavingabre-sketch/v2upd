@@ -520,17 +520,8 @@ new Chart(document.getElementById('chartKel').getContext('2d'),{
 });
 
 // ── SSE REAL-TIME UPDATE ─────────────────────────────────
-const toastStyle = \`
-  position:fixed;bottom:24px;right:24px;z-index:999;
-  background:#0e1e38;border:1px solid rgba(0,229,160,.35);
-  border-radius:12px;padding:14px 18px;
-  display:flex;align-items:center;gap:10px;
-  box-shadow:0 8px 32px rgba(0,0,0,.5);
-  font-family:'DM Sans',sans-serif;font-size:13px;color:#e2eaf5;
-  animation:slideIn .35s cubic-bezier(.16,1,.3,1) both;
-  max-width:320px;
-\`;
-const toastKeyframes = \`@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}\`;
+const toastStyle = 'position:fixed;bottom:24px;right:24px;z-index:999;background:#0e1e38;border:1px solid rgba(0,229,160,.35);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);font-family:sans-serif;font-size:13px;color:#e2eaf5;animation:slideIn .35s cubic-bezier(.16,1,.3,1) both;max-width:320px;';
+const toastKeyframes = '@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}';
 const styleEl = document.createElement('style');
 styleEl.textContent = toastKeyframes;
 document.head.appendChild(styleEl);
@@ -716,15 +707,15 @@ function renderSessions(sessions) {
     const active = s.id === lcActiveId ? 'active' : '';
     const closedCls = s.status==='closed' ? 'closed' : '';
     const unreadHtml = s.status==='active' && s.unread > 0
-      ? \`<span class="lc-unread">\${s.unread}</span>\` : '';
-    return \`<div class="lc-item \${active} \${closedCls}" onclick="openChat('\${s.id}')">
+      ? ${"`"}<span class="lc-unread">\${s.unread}</span>${"`"} : '';
+    return ${"`"}<div class="lc-item \${active} \${closedCls}" onclick="openChat('\${s.id}')">
       <div class="lc-avatar">\${initials}</div>
       <div class="lc-meta">
         <div class="lc-name">\${esc(s.name)} \${unreadHtml}</div>
         <div class="lc-preview">\${esc(preview)}</div>
       </div>
       <div class="lc-time">\${fmtTime(s.lastMessageAt)}</div>
-    </div>\`;
+    </div>${"`"};
   }).join('');
 }
 
@@ -737,21 +728,21 @@ function renderMessages(session) {
   el.innerHTML = session.messages.map(m => {
     let bubbleContent = '';
     if (m.mediaPath) {
-      bubbleContent += \`<a href="\${m.mediaPath}" target="_blank" rel="noopener">
+      bubbleContent += ${"`"}<a href="\${m.mediaPath}" target="_blank" rel="noopener">
         <img src="\${m.mediaPath}" class="lc-msg-img" alt="Foto" loading="lazy">
-      </a>\`;
+      </a>${"`"};
       if (m.text && m.text !== '[Foto]') {
-        bubbleContent += \`<div style="margin-top:6px;font-size:13px">\${esc(m.text)}</div>\`;
+        bubbleContent += ${"`"}<div style="margin-top:6px;font-size:13px">\${esc(m.text)}</div>${"`"};
       }
     } else {
       bubbleContent = esc(m.text);
     }
-    return \`
+    return ${"`"}
     <div class="lc-msg \${m.from}">
       <div class="lc-msg-sender">\${m.from==='admin'?'Admin':'👤 '+esc(session.name)}</div>
       <div class="lc-bubble">\${bubbleContent}</div>
       <div class="lc-msg-time">\${fmtTime(m.timestamp)}</div>
-    </div>\`;
+    </div>${"`"};
   }).join('');
   el.scrollTop = el.scrollHeight;
 }

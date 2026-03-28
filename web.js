@@ -773,17 +773,8 @@ new Chart(document.getElementById('chartKel').getContext('2d'),{
 });
 
 // ── SSE REAL-TIME UPDATE ─────────────────────────────────
-const toastStyle = \`
-  position:fixed;bottom:24px;right:24px;z-index:999;
-  background:#0e1e38;border:1px solid rgba(0,229,160,.35);
-  border-radius:12px;padding:14px 18px;
-  display:flex;align-items:center;gap:10px;
-  box-shadow:0 8px 32px rgba(0,0,0,.5);
-  font-family:'DM Sans',sans-serif;font-size:13px;color:#e2eaf5;
-  animation:slideIn .35s cubic-bezier(.16,1,.3,1) both;
-  max-width:320px;
-\`;
-const toastKeyframes = \`@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}\`;
+const toastStyle = 'position:fixed;bottom:24px;right:24px;z-index:999;background:#0e1e38;border:1px solid rgba(0,229,160,.35);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,.5);font-family:sans-serif;font-size:13px;color:#e2eaf5;animation:slideIn .35s cubic-bezier(.16,1,.3,1) both;max-width:320px;';
+const toastKeyframes = '@keyframes slideIn{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}';
 const styleEl = document.createElement('style');
 styleEl.textContent = toastKeyframes;
 document.head.appendChild(styleEl);
@@ -915,18 +906,18 @@ async function addKegiatan() {
 
     // Inject card baru ke atas list
     const k = json.kegiatan;
-    const card = \`<div class="kg-card" id="kgcard-\${k.id}">
+    const card = ${"`"}<div class="kg-card" id="kgcard-\${k.id}">
       <div class="kg-card-ico">📌</div>
       <div class="kg-card-body">
         <div class="kg-card-name">\${esc(k.nama)}</div>
         <div class="kg-card-meta">
-          \${k.tanggal ? \`<span class="kg-chip">📅 \${esc(k.tanggal)}</span>\` : ''}
-          \${k.tempat  ? \`<span class="kg-chip">📍 \${esc(k.tempat)}</span>\`  : ''}
+          \${k.tanggal ? ${"`"}<span class="kg-chip">📅 \${esc(k.tanggal)}</span>${"`"} : ''}
+          \${k.tempat  ? ${"`"}<span class="kg-chip">📍 \${esc(k.tempat)}</span>${"`"}  : ''}
         </div>
-        \${k.deskripsi ? \`<div class="kg-card-desc">\${esc(k.deskripsi)}</div>\` : ''}
+        \${k.deskripsi ? ${"`"}<div class="kg-card-desc">\${esc(k.deskripsi)}</div>${"`"} : ''}
       </div>
       <button class="kg-del-btn" onclick="deleteKegiatan('\${k.id}',this)">🗑️ Hapus</button>
-    </div>\`;
+    </div>${"`"};
 
     const list = document.getElementById('kg-list');
     const emptyEl = list.querySelector('.kg-empty');
@@ -1072,15 +1063,15 @@ function renderSessions(sessions) {
     const active = s.id === lcActiveId ? 'active' : '';
     const closedCls = s.status==='closed' ? 'closed' : '';
     const unreadHtml = s.status==='active' && s.unread > 0
-      ? \`<span class="lc-unread">\${s.unread}</span>\` : '';
-    return \`<div class="lc-item \${active} \${closedCls}" onclick="openChat('\${s.id}')">
+      ? ${"`"}<span class="lc-unread">\${s.unread}</span>${"`"} : '';
+    return ${"`"}<div class="lc-item \${active} \${closedCls}" onclick="openChat('\${s.id}')">
       <div class="lc-avatar">\${initials}</div>
       <div class="lc-meta">
         <div class="lc-name">\${esc(s.name)} \${unreadHtml}</div>
         <div class="lc-preview">\${esc(preview)}</div>
       </div>
       <div class="lc-time">\${fmtTime(s.lastMessageAt)}</div>
-    </div>\`;
+    </div>${"`"};
   }).join('');
 }
 
@@ -1094,21 +1085,21 @@ function renderMessages(session) {
     let bubbleContent = '';
     if (m.mediaPath) {
       // Tampilkan gambar + caption kalau ada
-      bubbleContent += \`<a href="\${m.mediaPath}" target="_blank" rel="noopener">
+      bubbleContent += ${"`"}<a href="\${m.mediaPath}" target="_blank" rel="noopener">
         <img src="\${m.mediaPath}" class="lc-msg-img" alt="Foto" loading="lazy">
-      </a>\`;
+      </a>${"`"};
       if (m.text && m.text !== '[Foto]') {
-        bubbleContent += \`<div style="margin-top:6px;font-size:13px">\${esc(m.text)}</div>\`;
+        bubbleContent += ${"`"}<div style="margin-top:6px;font-size:13px">\${esc(m.text)}</div>${"`"};
       }
     } else {
       bubbleContent = esc(m.text);
     }
-    return \`
+    return ${"`"}
     <div class="lc-msg \${m.from}">
       <div class="lc-msg-sender">\${m.from==='admin'?'Admin':'👤 '+esc(session.name)}</div>
       <div class="lc-bubble">\${bubbleContent}</div>
       <div class="lc-msg-time">\${fmtTime(m.timestamp)}</div>
-    </div>\`;
+    </div>${"`"};
   }).join('');
   el.scrollTop = el.scrollHeight;
 }
@@ -1339,7 +1330,7 @@ async function updateLaporanStatus(laporanId, btn) {
       const label = STATUS_MAP[status] || status;
       const color = COLOR_MAP[status] || '#94a3b8';
       const bg    = BG_MAP[status]    || 'rgba(148,163,184,.15)';
-      const newBadge = \`<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:\${bg};color:\${color};border:1px solid \${color}33">\${label}</span>\`;
+      const newBadge = ${"`"}<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:600;background:\${bg};color:\${color};border:1px solid \${color}33">\${label}</span>${"`"};
       document.querySelectorAll('#table-body tr').forEach(row => {
         const detBtn = row.querySelector('.det-btn');
         if (detBtn && detBtn.getAttribute('onclick') && detBtn.getAttribute('onclick').includes('"id":' + laporanId + ',')) {
