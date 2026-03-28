@@ -92,6 +92,7 @@ export const pageDashboard = (laporan, groups) => {
   const cKatD = JSON.stringify(katList.slice(0,7).map(k=>k[1]));
   const cKelL = JSON.stringify(kelList.slice(0,6).map(k=>k[0]));
   const cKelD = JSON.stringify(kelList.slice(0,6).map(k=>k[1]));
+  const laporanB64 = Buffer.from(JSON.stringify(laporan)).toString('base64');
 
   const rows = laporan.map(l => `
     <tr data-kat="${esc(l.kategori)}" data-kel="${esc(l.kelurahan)}">
@@ -102,7 +103,7 @@ export const pageDashboard = (laporan, groups) => {
       <td class="fz13 text-muted2" style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="${esc(l.isi)}">${esc((l.isi||'').substring(0,60))}${(l.isi||'').length>60?'…':''}</td>
       <td><a class="map-link" href="https://maps.google.com/?q=${l.koordinat?.lat||0},${l.koordinat?.lon||0}" target="_blank">📍 Peta</a></td>
       <td class="fz12 text-muted2">${fmtDate(l.tanggal)}</td>
-      <td><button class="det-btn" onclick='showDetail(${JSON.stringify(JSON.stringify(l))})'>Detail</button></td>
+      <td><button class="det-btn" onclick='showDetail(${l.id||0})'>Detail</button></td>
     </tr>`).join('');
 
   const katOpts = allKat.map(k=>`<option value="${esc(k)}">${esc(k)}</option>`).join('');
@@ -123,7 +124,7 @@ export const pageDashboard = (laporan, groups) => {
       <td><span class="kat-tag">${esc(l.kategori)}</span></td>
       <td>${esc(l.kelurahan)}</td>
       <td class="fz12 text-muted2">${fmtDate(l.tanggal)}</td>
-      <td><button class="det-btn" onclick='showDetail(${JSON.stringify(JSON.stringify(l))})'>Detail</button></td>
+      <td><button class="det-btn" onclick='showDetail(${l.id||0})'>Detail</button></td>
     </tr>`).join('');
 
   return `<!DOCTYPE html>
@@ -432,6 +433,8 @@ tr:hover td{background:rgba(13,31,60,.5)}
 </div>
 
 <script>
+const __raw=atob('${laporanB64}');
+const __LAPORAN__=JSON.parse(__raw);
 const sections=['overview','laporan','grup','livechat','panduan'];
 const titles={overview:'Overview',laporan:'Semua Laporan',grup:'Grup WhatsApp',livechat:'LiveChat Admin',panduan:'Panduan'};
 function showSec(id,el){
@@ -453,8 +456,8 @@ function filterTable(){
   document.getElementById('row-count').textContent=vis;
 }
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
-function showDetail(jsonStr){
-  const l=JSON.parse(jsonStr);
+function showDetail(idOrJson){
+  const l=typeof idOrJson==='number'?__LAPORAN__.find(x=>x.id===idOrJson)||{}:JSON.parse(idOrJson);
   const id='#'+String(l.id||0).padStart(4,'0');
   document.getElementById('modal-title').textContent='Detail Laporan '+id;
   const row=(lbl,val)=>'<div class="detail-row"><div class="detail-label">'+lbl+'</div><div class="detail-val">'+val+'</div></div>';
@@ -547,7 +550,6 @@ function fmtDateClient(iso) {
 
 function buildRow(l) {
   const id='#'+String(l.id||0).padStart(4,'0');
-  const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,"\\\\'");
   return '<tr data-kat="'+esc(l.kategori)+'" data-kel="'+esc(l.kelurahan)+'" style="animation:fi .4s ease both">'
     +'<td><span class="id-badge">'+id+'</span></td>'
     +'<td><div class="fw5">'+esc(l.namaPelapor)+'</div><div class="fz12 text-muted">'+esc((l.pelapor||'').replace('@s.whatsapp.net',''))+'</div></td>'
@@ -556,7 +558,7 @@ function buildRow(l) {
     +'<td class="fz13 text-muted2" style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis" title="'+esc(l.isi)+'">'+(l.isi||'').substring(0,60)+((l.isi||'').length>60?'…':'')+'</td>'
     +'<td><a class="map-link" href="https://maps.google.com/?q='+(l.koordinat?.lat||0)+','+(l.koordinat?.lon||0)+'" target="_blank">📍 Peta</a></td>'
     +'<td class="fz12 text-muted2">'+fmtDateClient(l.tanggal)+'</td>'
-    +'<td><button class="det-btn" onclick=\\'showDetail(JSON.stringify('+jsonEsc+'))\\'>Detail</button></td>'
+    +'<td><button class="det-btn" onclick="showDetail('+l.id+')" >Detail</button></td>'
     +'</tr>';
 }
 
@@ -571,6 +573,7 @@ evtSource.addEventListener('update', (e) => {
   const newCount = laporan.length;
   const newItems = laporan.slice(0, newCount - knownCount);
   knownCount = newCount;
+  __LAPORAN__.unshift(...newItems.slice().reverse());
 
   document.querySelector('#sec-overview .sc-val').textContent = newCount;
   const todayCount = laporan.filter(l=>new Date(l.tanggal).toDateString()===new Date().toDateString()).length;
@@ -590,14 +593,13 @@ evtSource.addEventListener('update', (e) => {
   if (overviewTbody) {
     newItems.reverse().forEach(l => {
       const id='#'+String(l.id||0).padStart(4,'0');
-      const jsonEsc=esc(JSON.stringify(l)).replace(/'/g,"\\\\'");
       const row='<tr style="animation:fi .4s ease both">'
         +'<td><span class="id-badge">'+id+'</span></td>'
         +'<td class="fw5">'+esc(l.namaPelapor)+'</td>'
         +'<td><span class="kat-tag">'+esc(l.kategori)+'</span></td>'
         +'<td>'+esc(l.kelurahan)+'</td>'
         +'<td class="fz12 text-muted2">'+fmtDateClient(l.tanggal)+'</td>'
-        +'<td><button class="det-btn" onclick=\\'showDetail(JSON.stringify('+jsonEsc+'))\\'>Detail</button></td>'
+        +'<td><button class="det-btn" onclick="showDetail('+l.id+')" >Detail</button></td>'
         +'</tr>';
       overviewTbody.insertAdjacentHTML('afterbegin', row);
     });
